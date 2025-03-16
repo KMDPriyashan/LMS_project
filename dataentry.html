@@ -1,0 +1,775 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LMS Data Entry</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow-x: hidden;
+        }
+
+        .navbar {
+            background-color: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: white;
+            text-decoration: none;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+        }
+
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            color: #f0f0f0;
+            transform: translateY(-2px);
+        }
+
+        .container {
+            max-width: 1000px;
+            width: 100%;
+            margin: 2rem auto;
+            padding: 0 2rem;
+            flex: 1;
+        }
+
+        .form-container {
+            background-color: white;
+            border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+            width: 100%;
+            overflow: hidden;
+            position: relative;
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .form-container h2 {
+            font-size: 2rem;
+            margin-bottom: 1.5rem;
+            color: #333;
+            text-align: center;
+        }
+
+        .form-container h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1.5rem;
+            color: #444;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 1rem;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .form-control:focus {
+            border-color: #667eea;
+            box-shadow: 0 0 0 2px rgba(102, 126, 234, 0.2);
+            outline: none;
+        }
+
+        select.form-control {
+            appearance: none;
+            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23464646' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+            background-repeat: no-repeat;
+            background-position: right 1rem center;
+            background-size: 1em;
+        }
+
+        textarea.form-control {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        .btn {
+            padding: 1rem 2rem;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-right: 0.5rem;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-secondary {
+            background: linear-gradient(135deg, #b8c2cc 0%, #6b7c93 100%);
+        }
+
+        .tab-nav {
+            display: flex;
+            background-color: rgba(255, 255, 255, 0.2);
+            border-radius: 15px;
+            overflow: hidden;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .tab-button {
+            flex: 1;
+            background: none;
+            border: none;
+            padding: 1rem;
+            font-size: 1rem;
+            font-weight: 600;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .tab-button:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .tab-button.active {
+            background-color: rgba(255, 255, 255, 0.3);
+        }
+
+        .tab-button::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: white;
+            transform: scaleX(0);
+            transition: transform 0.3s ease;
+            transform-origin: bottom right;
+        }
+
+        .tab-button.active::after {
+            transform: scaleX(1);
+            transform-origin: bottom left;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+            animation: fadeIn 0.5s ease forwards;
+        }
+
+        .success-message {
+            background-color: rgba(72, 187, 120, 0.1);
+            color: #2f855a;
+            border-left: 4px solid #2f855a;
+            padding: 1rem;
+            margin-bottom: 1.5rem;
+            border-radius: 4px;
+            display: none;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        thead {
+            background-color: rgba(102, 126, 234, 0.1);
+        }
+
+        th,
+        td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid #eee;
+        }
+
+        th {
+            font-weight: 600;
+            color: #444;
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        tr:hover {
+            background-color: rgba(102, 126, 234, 0.05);
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes float {
+            0% {
+                transform: translateY(0px);
+            }
+
+            50% {
+                transform: translateY(-10px);
+            }
+
+            100% {
+                transform: translateY(0px);
+            }
+        }
+
+        .animated {
+            animation: fadeIn 0.8s ease forwards;
+        }
+
+        .delay-1 {
+            animation-delay: 0.2s;
+        }
+
+        .delay-2 {
+            animation-delay: 0.4s;
+        }
+
+        .delay-3 {
+            animation-delay: 0.6s;
+        }
+
+        .float {
+            animation: float 4s ease-in-out infinite;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 1rem;
+                margin: 1rem auto;
+            }
+
+            .form-container {
+                padding: 1.5rem;
+            }
+
+            .tab-button {
+                padding: 0.75rem 0.5rem;
+                font-size: 0.9rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Navbar -->
+    <nav class="navbar">
+        <a href="#" class="logo animated">LMS System</a>
+        <div class="nav-links">
+            <a href="#" class="animated delay-1">Dashboard</a>
+            <a href="#" class="animated delay-2">Reports</a>
+            <a href="#" class="animated delay-3">Settings</a>
+        </div>
+    </nav>
+
+    <!-- Main Container -->
+    <div class="container animated">
+        <h2 style="color: white; text-align: center; margin-bottom: 2rem;">Learning Management System</h2>
+
+        <!-- Tab Navigation -->
+        <div class="tab-nav float">
+            <button class="tab-button active" data-tab="courses">Courses</button>
+            <button class="tab-button" data-tab="students">Students</button>
+            <button class="tab-button" data-tab="instructors">Instructors</button>
+            <button class="tab-button" data-tab="enrollments">Enrollments</button>
+        </div>
+
+        <!-- Courses Tab -->
+        <div id="courses" class="tab-content active">
+            <div class="form-container animated">
+                <h3>Course Data Entry</h3>
+                <div id="courseSuccessMessage" class="success-message">
+                    Course data successfully saved!
+                </div>
+                <form id="courseForm">
+                    <div class="form-group">
+                        <input type="text" class="form-control" id="courseCode" placeholder="Course Code*" required>
+                    </div>
+                    <div class="form-group">
+                        <input type="text" class="form-control" id="courseTitle" placeholder="Course Title*" required>
+                    </div>
+                    <div class="form-group">
+                        <textarea class="form-control" id="courseDescription" placeholder="Description"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <input type="number" class="form-control" id="courseCredits" placeholder="Credits*" min="0"
+                            max="6" required>
+                    </div>
+                    <div class="form-group">
+                        <select class="form-control" id="courseDepartment" required>
+                            <option value="">Select Department*</option>
+                            <option value="CS">Computer Science</option>
+                            <option value="MATH">Mathematics</option>
+                            <option value="ENG">Engineering</option>
+                            <option value="BUS">Business</option>
+                            <option value="SCI">Sciences</option>
+                            <option value="ART">Arts</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <input type="date" class="form-control" id="courseStartDate" placeholder="Start Date*" required>
+                    </div>
+                    <div class="form-group">
+                        <input type="date" class="form-control" id="courseEndDate" placeholder="End Date*" required>
+                    </div>
+                    <div class="form-group">
+                        <select class="form-control" id="courseStatus" required>
+                            <option value="">Select Status*</option>
+                            <option value="active">Active</option>
+                            <option value="draft">Draft</option>
+                            <option value="completed">Completed</option>
+                            <option value="archived">Archived</option>
+                        </select>
+                    </div>
+                    <div>
+                        <button type="submit" class="btn">Save Course</button>
+                        <button type="reset" class="btn btn-secondary">Clear Form</button>
+                    </div>
+                </form>
+            </div>
+
+            <div class="form-container animated delay-1">
+                <h3>Existing Courses</h3>
+                <table id="coursesTable">
+                    <thead>
+                        <tr>
+                            <th>Code</th>
+                            <th>Title</th>
+                            <th>Department</th>
+                            <th>Credits</th>
+                            <th>Start Date</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>CS101</td>
+                            <td>Introduction to Programming</td>
+                            <td>Computer Science</td>
+                            <td>3</td>
+                            <td>04/01/2025</td>
+                            <td>Active</td>
+                        </tr>
+                        <tr>
+                            <td>MATH202</td>
+                            <td>Calculus II</td>
+                            <td>Mathematics</td>
+                            <td>4</td>
+                            <td>04/01/2025</td>
+                            <td>Active</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Students Tab -->
+        <div id="students" class="tab-content">
+            <div class="form-container animated">
+                <h3>Student Data Entry</h3>
+                <div id="studentSuccessMessage" class="success-message">
+                    Student data successfully saved!
+                </div>
+                <form id="studentForm">
+                    <div class="form-group">
+                        <input type="text" class="form-control" id="studentId" placeholder="Student ID*" required>
+                    </div>
+                    <div class="form-group">
+                        <input type="text" class="form-control" id="firstName" placeholder="First Name*" required>
+                    </div>
+                    <div class="form-group">
+                        <input type="text" class="form-control" id="lastName" placeholder="Last Name*" required>
+                    </div>
+                    <div class="form-group">
+                        <input type="email" class="form-control" id="email" placeholder="Email*" required>
+                    </div>
+                    <div class="form-group">
+                        <input type="date" class="form-control" id="dateOfBirth" placeholder="Date of Birth">
+                    </div>
+                    <div class="form-group">
+                        <input type="text" class="form-control" id="phone" placeholder="Phone Number">
+                    </div>
+                    <div class="form-group">
+                        <select class="form-control" id="program" required>
+                            <option value="">Select Program/Major*</option>
+                            <option value="CS">Computer Science</option>
+                            <option value="MATH">Mathematics</option>
+                            <option value="ENG">Engineering</option>
+                            <option value="BUS">Business</option>
+                            <option value="SCI">Sciences</option>
+                            <option value="ART">Arts</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <input type="date" class="form-control" id="enrollmentDate" placeholder="Enrollment Date*"
+                            required>
+                    </div>
+                    <div class="form-group">
+                        <select class="form-control" id="status" required>
+                            <option value="">Select Status*</option>
+                            <option value="active">Active</option>
+                            <option value="onLeave">On Leave</option>
+                            <option value="graduated">Graduated</option>
+                            <option value="withdrawn">Withdrawn</option>
+                        </select>
+                    </div>
+                    <div>
+                        <button type="submit" class="btn">Save Student</button>
+                        <button type="reset" class="btn btn-secondary">Clear Form</button>
+                    </div>
+                </form>
+            </div>
+
+            <div class="form-container animated delay-1">
+                <h3>Existing Students</h3>
+                <table id="studentsTable">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Name</th>
+                            <th>Email</th>
+                            <th>Program</th>
+                            <th>Enrollment Date</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>STU001</td>
+                            <td>John Smith</td>
+                            <td>john.smith@example.com</td>
+                            <td>Computer Science</td>
+                            <td>09/01/2024</td>
+                            <td>Active</td>
+                        </tr>
+                        <tr>
+                            <td>STU002</td>
+                            <td>Emily Johnson</td>
+                            <td>emily.j@example.com</td>
+                            <td>Business</td>
+                            <td>09/01/2024</td>
+                            <td>Active</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Instructors Tab -->
+        <div id="instructors" class="tab-content">
+            <div class="form-container animated">
+                <h3>Instructor Data Entry</h3>
+                <div id="instructorSuccessMessage" class="success-message">
+                    Instructor data successfully saved!
+                </div>
+                <form id="instructorForm">
+                    <div class="form-group">
+                        <input type="text" class="form-control" id="instructorId" placeholder="Instructor ID*" required>
+                    </div>
+                    <div class="form-group">
+                        <input type="text" class="form-control" id="instructorFirstName" placeholder="First Name*"
+                            required>
+                    </div>
+                    <div class="form-group">
+                        <input type="text" class="form-control" id="instructorLastName" placeholder="Last Name*"
+                            required>
+                    </div>
+                    <div class="form-group">
+                        <input type="email" class="form-control" id="instructorEmail" placeholder="Email*" required>
+                    </div>
+                    <div class="form-group">
+                        <input type="text" class="form-control" id="instructorPhone" placeholder="Phone Number">
+                    </div>
+                    <div class="form-group">
+                        <select class="form-control" id="department" required>
+                            <option value="">Select Department*</option>
+                            <option value="CS">Computer Science</option>
+                            <option value="MATH">Mathematics</option>
+                            <option value="ENG">Engineering</option>
+                            <option value="BUS">Business</option>
+                            <option value="SCI">Sciences</option>
+                            <option value="ART">Arts</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <select class="form-control" id="position" required>
+                            <option value="">Select Position*</option>
+                            <option value="professor">Professor</option>
+                            <option value="associateProf">Associate Professor</option>
+                            <option value="assistantProf">Assistant Professor</option>
+                            <option value="lecturer">Lecturer</option>
+                            <option value="adjunct">Adjunct</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <input type="date" class="form-control" id="hireDate" placeholder="Hire Date*" required>
+                    </div>
+                    <div class="form-group">
+                        <textarea class="form-control" id="specializationAreas"
+                            placeholder="Specialization Areas"></textarea>
+                    </div>
+                    <div>
+                        <button type="submit" class="btn">Save Instructor</button>
+                        <button type="reset" class="btn btn-secondary">Clear Form</button>
+                    </div>
+                </form>
+            </div>
+
+            <div class="form-container animated delay-1">
+                <h3>Existing Instructors</h3>
+                <table id="instructorsTable">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Name</th>
+                            <th>Email</th>
+                            <th>Department</th>
+                            <th>Position</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>INS001</td>
+                            <td>Robert Williams</td>
+                            <td>robert.w@example.com</td>
+                            <td>Computer Science</td>
+                            <td>Associate Professor</td>
+                        </tr>
+                        <tr>
+                            <td>INS002</td>
+                            <td>Lisa Chen</td>
+                            <td>lisa.chen@example.com</td>
+                            <td>Mathematics</td>
+                            <td>Professor</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Enrollments Tab -->
+        <div id="enrollments" class="tab-content">
+            <div class="form-container animated">
+                <h3>Enrollment Data Entry</h3>
+                <div id="enrollmentSuccessMessage" class="success-message">
+                    Enrollment data successfully saved!
+                </div>
+                <form id="enrollmentForm">
+                    <div class="form-group">
+                        <input type="text" class="form-control" id="enrollmentId" placeholder="Enrollment ID*" required>
+                    </div>
+                    <div class="form-group">
+                        <input type="text" class="form-control" id="enrollStudentId" placeholder="Student ID*" required>
+                    </div>
+                    <div class="form-group">
+                        <input type="text" class="form-control" id="enrollCourseCode" placeholder="Course Code*"
+                            required>
+                    </div>
+                    <div class="form-group">
+                        <input type="date" class="form-control" id="enrollmentDate" placeholder="Enrollment Date*"
+                            required>
+                    </div>
+                    <div class="form-group">
+                        <select class="form-control" id="enrollmentStatus" required>
+                            <option value="">Select Status*</option>
+                            <option value="enrolled">Enrolled</option>
+                            <option value="withdrawn">Withdrawn</option>
+                            <option value="completed">Completed</option>
+                            <option value="failed">Failed</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <input type="text" class="form-control" id="grade" placeholder="Grade">
+                    </div>
+                    <div class="form-group">
+                        <input type="date" class="form-control" id="completionDate" placeholder="Completion Date">
+                    </div>
+                    <div class="form-group">
+                        <textarea class="form-control" id="notes" placeholder="Notes"></textarea>
+                    </div>
+                    <div>
+                        <button type="submit" class="btn">Save Enrollment</button>
+                        <button type="reset" class="btn btn-secondary">Clear Form</button>
+                    </div>
+                </form>
+            </div>
+
+            <div class="form-container animated delay-1">
+                <h3>Existing Enrollments</h3>
+                <table id="enrollmentsTable">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Student ID</th>
+                            <th>Course Code</th>
+                            <th>Enrollment Date</th>
+                            <th>Status</th>
+                            <th>Grade</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>ENR001</td>
+                            <td>STU001</td>
+                            <td>CS101</td>
+                            <td>03/01/2025</td>
+                            <td>Enrolled</td>
+                            <td>-</td>
+                        </tr>
+                        <tr>
+                            <td>ENR002</td>
+                            <td>STU002</td>
+                            <td>MATH202</td>
+                            <td>03/01/2025</td>
+                            <td>Enrolled</td>
+                            <td>-</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Tab switching functionality
+            const tabButtons = document.querySelectorAll('.tab-button');
+            const tabContents = document.querySelectorAll('.tab-content');
+
+            if (tabButtons.length && tabContents.length) {
+                tabButtons.forEach(button => {
+                    button.addEventListener('click', () => {
+                        const tabId = button.getAttribute('data-tab');
+
+                        if (tabId) {
+                            // Remove active class from all buttons and contents
+                            tabButtons.forEach(btn => btn.classList.remove('active'));
+                            tabContents.forEach(content => content.classList.remove('active'));
+
+                            // Add active class to current button and content
+                            button.classList.add('active');
+                            document.getElementById(tabId)?.classList.add('active');
+                        }
+                    });
+                });
+            }
+
+            // Form submission handling
+            const forms = {
+                'courseForm': 'courseSuccessMessage',
+                'studentForm': 'studentSuccessMessage',
+                'instructorForm': 'instructorSuccessMessage',
+                'enrollmentForm': 'enrollmentSuccessMessage'
+            };
+
+            Object.keys(forms).forEach(formId => {
+                const form = document.getElementById(formId);
+                const successMessage = document.getElementById(forms[formId]);
+
+                if (form && successMessage) {
+                    form.addEventListener('submit', function (e) {
+                        e.preventDefault();
+
+                        // Ensure required fields are filled
+                        let isValid = true;
+                        form.querySelectorAll('[required]').forEach(input => {
+                            if (!input.value.trim()) {
+                                isValid = false;
+                                input.style.borderColor = "red";
+                            } else {
+                                input.style.borderColor = "";
+                            }
+                        });
+
+                        if (!isValid) {
+                            alert("Please fill in all required fields.");
+                            return;
+                        }
+
+                        // Simulating successful form submission
+                        console.log('Form submitted:', formId);
+
+                        // Display success message
+                        successMessage.style.display = 'block';
+
+                        // Hide success message after 3 seconds
+                        setTimeout(function () {
+                            successMessage.style.display = 'none';
+                        }, 3000);
+
+                        // Reset form
+                        form.reset();
+                    });
+                }
+            });
+
+            // Animation for form inputs
+            const inputs = document.querySelectorAll('.form-control');
+            if (inputs.length) {
+                inputs.forEach(input => {
+                    input.addEventListener('focus', function () {
+                        this.classList.add('animated');
+                    });
+                });
+            }
+        });
+
+    </script>
+</body>
+
+</html>

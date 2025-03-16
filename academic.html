@@ -1,0 +1,895 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Academic Portal - Subject Information</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow-x: hidden;
+        }
+
+        .navbar {
+            background-color: #2c3e50;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: white;
+            text-decoration: none;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+        }
+
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            color: #3498db;
+            transform: translateY(-2px);
+        }
+
+        .container {
+            max-width: 1200px;
+            width: 100%;
+            margin: 2rem auto;
+            padding: 0 2rem;
+        }
+
+        .card {
+            background-color: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            margin-bottom: 2rem;
+            overflow: hidden;
+            transition: transform 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+        }
+
+        .card-header {
+            background: linear-gradient(135deg, #3498db 0%, #2c3e50 100%);
+            color: white;
+            padding: 1.5rem;
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+
+        .card-body {
+            padding: 2rem;
+        }
+
+        .subjects-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .subject-card {
+            background-color: #f8f9fa;
+            border-radius: 10px;
+            padding: 1.5rem;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+        }
+
+        .subject-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
+
+        .subject-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 0.5rem;
+        }
+
+        .subject-description {
+            color: #555;
+            font-size: 0.95rem;
+            line-height: 1.5;
+        }
+
+        .accordion {
+            margin-bottom: 1rem;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .accordion-header {
+            background-color: #f8f9fa;
+            padding: 1rem 1.5rem;
+            font-weight: 600;
+            color: #2c3e50;
+            cursor: pointer;
+            border-bottom: 1px solid #e9ecef;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: background-color 0.3s;
+        }
+
+        .accordion-header:hover {
+            background-color: #e9ecef;
+        }
+        
+        .accordion-content {
+            padding: 0;
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease-out;
+            background-color: white;
+        }
+        
+        .accordion-content-inner {
+            padding: 1.5rem;
+        }
+
+        .topic-list {
+            list-style-type: none;
+        }
+
+        .topic-list li {
+            padding: 0.5rem 0;
+            border-bottom: 1px solid #f1f1f1;
+        }
+
+        .topic-list li:last-child {
+            border-bottom: none;
+        }
+
+        .papers-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .paper-card {
+            border: 1px solid #e9ecef;
+            border-radius: 8px;
+            padding: 1.5rem;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .paper-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .paper-year {
+            font-weight: 600;
+            font-size: 1.2rem;
+            color: #2c3e50;
+            margin-bottom: 1rem;
+        }
+
+        .paper-term {
+            background-color: #e9ecef;
+            border-radius: 20px;
+            padding: 0.3rem 1rem;
+            margin-bottom: 1.5rem;
+            display: inline-block;
+            font-size: 0.9rem;
+            color: #555;
+        }
+
+        .btn {
+            padding: 0.7rem 1.5rem;
+            border-radius: 6px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn-primary {
+            background-color: #3498db;
+            color: white;
+            border: none;
+        }
+
+        .btn-primary:hover {
+            background-color: #2980b9;
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background-color: #f1f1f1;
+            color: #333;
+            border: 1px solid #ddd;
+        }
+
+        .btn-secondary:hover {
+            background-color: #e9ecef;
+            transform: translateY(-2px);
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-label {
+            font-weight: 500;
+            display: block;
+            margin-bottom: 0.5rem;
+            color: #333;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 0.8rem 1rem;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .form-control:focus {
+            border-color: #3498db;
+            box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.2);
+            outline: none;
+        }
+
+        .dropzone {
+            border: 2px dashed #ddd;
+            border-radius: 8px;
+            padding: 2.5rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .dropzone:hover {
+            border-color: #3498db;
+        }
+
+        .upload-icon {
+            font-size: 2.5rem;
+            color: #3498db;
+            margin-bottom: 1rem;
+        }
+
+        .responses-list {
+            margin-top: 2rem;
+        }
+
+        .response-item {
+            padding: 1rem;
+            border-bottom: 1px solid #e9ecef;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .response-item:last-child {
+            border-bottom: none;
+        }
+
+        .response-info {
+            flex: 1;
+        }
+
+        .response-name {
+            font-weight: 500;
+            margin-bottom: 0.3rem;
+        }
+
+        .response-date {
+            font-size: 0.85rem;
+            color: #6c757d;
+        }
+
+        .response-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        footer {
+            background-color: #2c3e50;
+            color: white;
+            padding: 2rem 0;
+            margin-top: auto;
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            gap: 2rem;
+            padding: 0 2rem;
+        }
+
+        .footer-section {
+            flex: 1;
+            min-width: 250px;
+        }
+
+        .footer-title {
+            font-size: 1.2rem;
+            margin-bottom: 1.5rem;
+            font-weight: 600;
+        }
+
+        .footer-links {
+            list-style: none;
+        }
+
+        .footer-links li {
+            margin-bottom: 0.8rem;
+        }
+
+        .footer-links a {
+            color: #ecf0f1;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .footer-links a:hover {
+            color: #3498db;
+            text-decoration: underline;
+        }
+
+        .footer-bottom {
+            text-align: center;
+            padding-top: 2rem;
+            margin-top: 2rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        @media (max-width: 768px) {
+            .navbar {
+                padding: 1rem;
+            }
+            
+            .container {
+                padding: 1rem;
+            }
+            
+            .subjects-grid, .papers-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar">
+        <a href="#" class="logo">Academic Portal</a>
+        <div class="nav-links">
+            <a href="#">Home</a>
+            <a href="#">Subjects</a>
+            <a href="#">Resources</a>
+            <a href="#">Contact</a>
+        </div>
+    </nav>
+
+    <!-- Main Container -->
+    <div class="container">
+        <!-- Subject Information Section -->
+        <div class="card">
+            <div class="card-header">
+                Subject Information
+            </div>
+            <div class="card-body">
+                <p style="margin-bottom: 1.5rem;">Explore our comprehensive range of subjects with detailed information, modules, and resources to support your academic journey.</p>
+                
+                <div class="subjects-grid">
+                    <div class="subject-card">
+                        <div class="subject-title">Mathematics</div>
+                        <div class="subject-description">
+                            The study of numbers, quantities, and shapes. Mathematics explores patterns and relationships, providing foundations for problem-solving and logical reasoning across various fields.
+                        </div>
+                    </div>
+                    
+                    <div class="subject-card">
+                        <div class="subject-title">Physics</div>
+                        <div class="subject-description">
+                            The scientific study of matter, energy, and their interactions. Physics explores the fundamental principles governing the natural world from subatomic particles to the cosmos.
+                        </div>
+                    </div>
+                    
+                    <div class="subject-card">
+                        <div class="subject-title">Computer Science</div>
+                        <div class="subject-description">
+                            The study of computers and computational systems. Computer Science covers theory, development, design, and application of software and computer systems.
+                        </div>
+                    </div>
+                    
+                    <div class="subject-card">
+                        <div class="subject-title">Biology</div>
+                        <div class="subject-description">
+                            The study of living organisms and their interactions with each other and the environment. Biology explores the structure, function, growth, and evolution of living systems.
+                        </div>
+                    </div>
+                    
+                    <div class="subject-card">
+                        <div class="subject-title">Chemistry</div>
+                        <div class="subject-description">
+                            The study of matter, its properties, and the changes it undergoes. Chemistry explores the composition, structure, properties, and transformations of substances.
+                        </div>
+                    </div>
+                    
+                    <div class="subject-card">
+                        <div class="subject-title">Literature</div>
+                        <div class="subject-description">
+                            The study of written works with artistic merit. Literature explores various forms of expression including poetry, novels, drama, and essays across different cultures and time periods.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Subject Modules Section -->
+        <div class="card">
+            <div class="card-header">
+                Subject Modules & Topics
+            </div>
+            <div class="card-body">
+                <p style="margin-bottom: 1.5rem;">Each subject is divided into modules covering specific topics. Expand each module to see the topics covered.</p>
+                
+                <!-- Mathematics Modules -->
+                <div class="accordion">
+                    <div class="accordion-header">
+                        Mathematics Modules
+                        <span>+</span>
+                    </div>
+                    <div class="accordion-content">
+                        <div class="accordion-content-inner">
+                            <div class="accordion">
+                                <div class="accordion-header">
+                                    Module 1: Algebra
+                                    <span>+</span>
+                                </div>
+                                <div class="accordion-content">
+                                    <div class="accordion-content-inner">
+                                        <ul class="topic-list">
+                                            <li>Linear Equations</li>
+                                            <li>Quadratic Equations</li>
+                                            <li>Polynomials</li>
+                                            <li>Functions and Relations</li>
+                                            <li>Systems of Equations</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="accordion">
+                                <div class="accordion-header">
+                                    Module 2: Calculus
+                                    <span>+</span>
+                                </div>
+                                <div class="accordion-content">
+                                    <div class="accordion-content-inner">
+                                        <ul class="topic-list">
+                                            <li>Limits and Continuity</li>
+                                            <li>Differentiation</li>
+                                            <li>Integration</li>
+                                            <li>Applications of Derivatives</li>
+                                            <li>Applications of Integrals</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="accordion">
+                                <div class="accordion-header">
+                                    Module 3: Statistics
+                                    <span>+</span>
+                                </div>
+                                <div class="accordion-content">
+                                    <div class="accordion-content-inner">
+                                        <ul class="topic-list">
+                                            <li>Data Collection and Analysis</li>
+                                            <li>Probability</li>
+                                            <li>Descriptive Statistics</li>
+                                            <li>Inferential Statistics</li>
+                                            <li>Hypothesis Testing</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Physics Modules -->
+                <div class="accordion">
+                    <div class="accordion-header">
+                        Physics Modules
+                        <span>+</span>
+                    </div>
+                    <div class="accordion-content">
+                        <div class="accordion-content-inner">
+                            <div class="accordion">
+                                <div class="accordion-header">
+                                    Module 1: Mechanics
+                                    <span>+</span>
+                                </div>
+                                <div class="accordion-content">
+                                    <div class="accordion-content-inner">
+                                        <ul class="topic-list">
+                                            <li>Kinematics</li>
+                                            <li>Newton's Laws</li>
+                                            <li>Work, Energy, and Power</li>
+                                            <li>Momentum and Collisions</li>
+                                            <li>Rotational Motion</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="accordion">
+                                <div class="accordion-header">
+                                    Module 2: Electromagnetism
+                                    <span>+</span>
+                                </div>
+                                <div class="accordion-content">
+                                    <div class="accordion-content-inner">
+                                        <ul class="topic-list">
+                                            <li>Electric Fields</li>
+                                            <li>Electric Potential</li>
+                                            <li>Magnetic Fields</li>
+                                            <li>Electromagnetic Induction</li>
+                                            <li>Maxwell's Equations</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="accordion">
+                                <div class="accordion-header">
+                                    Module 3: Thermodynamics
+                                    <span>+</span>
+                                </div>
+                                <div class="accordion-content">
+                                    <div class="accordion-content-inner">
+                                        <ul class="topic-list">
+                                            <li>Temperature and Heat</li>
+                                            <li>Laws of Thermodynamics</li>
+                                            <li>Heat Engines</li>
+                                            <li>Entropy</li>
+                                            <li>Thermodynamic Processes</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Computer Science Modules -->
+                <div class="accordion">
+                    <div class="accordion-header">
+                        Computer Science Modules
+                        <span>+</span>
+                    </div>
+                    <div class="accordion-content">
+                        <div class="accordion-content-inner">
+                            <div class="accordion">
+                                <div class="accordion-header">
+                                    Module 1: Programming Fundamentals
+                                    <span>+</span>
+                                </div>
+                                <div class="accordion-content">
+                                    <div class="accordion-content-inner">
+                                        <ul class="topic-list">
+                                            <li>Variables and Data Types</li>
+                                            <li>Control Structures</li>
+                                            <li>Functions and Methods</li>
+                                            <li>Object-Oriented Programming</li>
+                                            <li>Error Handling</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="accordion">
+                                <div class="accordion-header">
+                                    Module 2: Data Structures and Algorithms
+                                    <span>+</span>
+                                </div>
+                                <div class="accordion-content">
+                                    <div class="accordion-content-inner">
+                                        <ul class="topic-list">
+                                            <li>Arrays and Lists</li>
+                                            <li>Stacks and Queues</li>
+                                            <li>Trees and Graphs</li>
+                                            <li>Searching Algorithms</li>
+                                            <li>Sorting Algorithms</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="accordion">
+                                <div class="accordion-header">
+                                    Module 3: Web Development
+                                    <span>+</span>
+                                </div>
+                                <div class="accordion-content">
+                                    <div class="accordion-content-inner">
+                                        <ul class="topic-list">
+                                            <li>HTML and CSS</li>
+                                            <li>JavaScript</li>
+                                            <li>Frontend Frameworks</li>
+                                            <li>Backend Development</li>
+                                            <li>Database Integration</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Past Papers Section -->
+        <div class="card">
+            <div class="card-header">
+                Past Papers
+            </div>
+            <div class="card-body">
+                <p style="margin-bottom: 1.5rem;">Access previous examination papers to help with your preparation. Click on the download button to get a copy.</p>
+                
+                <div class="papers-grid">
+                    <div class="paper-card">
+                        <div class="paper-year">2024</div>
+                        <div class="paper-term">Spring Term</div>
+                        <div>
+                            <a href="#" class="btn btn-primary">Download Paper</a>
+                        </div>
+                    </div>
+                    
+                    <div class="paper-card">
+                        <div class="paper-year">2023</div>
+                        <div class="paper-term">Fall Term</div>
+                        <div>
+                            <a href="#" class="btn btn-primary">Download Paper</a>
+                        </div>
+                    </div>
+                    
+                    <div class="paper-card">
+                        <div class="paper-year">2023</div>
+                        <div class="paper-term">Spring Term</div>
+                        <div>
+                            <a href="#" class="btn btn-primary">Download Paper</a>
+                        </div>
+                    </div>
+                    
+                    <div class="paper-card">
+                        <div class="paper-year">2022</div>
+                        <div class="paper-term">Fall Term</div>
+                        <div>
+                            <a href="#" class="btn btn-primary">Download Paper</a>
+                        </div>
+                    </div>
+                    
+                    <div class="paper-card">
+                        <div class="paper-year">2022</div>
+                        <div class="paper-term">Spring Term</div>
+                        <div>
+                            <a href="#" class="btn btn-primary">Download Paper</a>
+                        </div>
+                    </div>
+                    
+                    <div class="paper-card">
+                        <div class="paper-year">2021</div>
+                        <div class="paper-term">Fall Term</div>
+                        <div>
+                            <a href="#" class="btn btn-primary">Download Paper</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Answer Sheet Upload/Download Section -->
+        <div class="card">
+            <div class="card-header">
+                Answer Sheet Submission
+            </div>
+            <div class="card-body">
+                <p style="margin-bottom: 1.5rem;">Upload your answer sheets as PDF files and view previously uploaded solutions.</p>
+                
+                <div style="margin-bottom: 2.5rem;">
+                    <form>
+                        <div class="form-group">
+                            <label for="student-name" class="form-label">Full Name</label>
+                            <input type="text" id="student-name" class="form-control" placeholder="Enter your full name" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="student-id" class="form-label">Student ID</label>
+                            <input type="text" id="student-id" class="form-control" placeholder="Enter your student ID" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="subject" class="form-label">Subject</label>
+                            <select id="subject" class="form-control" required>
+                                <option value="">Select a subject</option>
+                                <option value="mathematics">Mathematics</option>
+                                <option value="physics">Physics</option>
+                                <option value="computer-science">Computer Science</option>
+                                <option value="biology">Biology</option>
+                                <option value="chemistry">Chemistry</option>
+                                <option value="literature">Literature</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="paper-year" class="form-label">Paper Year & Term</label>
+                            <select id="paper-year" class="form-control" required>
+                                <option value="">Select paper year & term</option>
+                                <option value="2024-spring">2024 - Spring Term</option>
+                                <option value="2023-fall">2023 - Fall Term</option>
+                                <option value="2023-spring">2023 - Spring Term</option>
+                                <option value="2022-fall">2022 - Fall Term</option>
+                                <option value="2022-spring">2022 - Spring Term</option>
+                                <option value="2021-fall">2021 - Fall Term</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label">Upload Answer Sheet (PDF only)</label>
+                            <div class="dropzone" id="upload-dropzone">
+                                <div class="upload-icon">📄</div>
+                                <p>Drag and drop your PDF file here</p>
+                                <p>or</p>
+                                <button type="button" class="btn btn-secondary">Browse Files</button>
+                                <input type="file" id="file-upload" style="display: none;" accept=".pdf">
+                            </div>
+                        </div>
+                        
+                        <div style="text-align: right;">
+                            <button type="submit" class="btn btn-primary">Submit Answer Sheet</button>
+                        </div>
+                    </form>
+                </div>
+                
+                <h3 style="margin-bottom: 1rem; font-size: 1.3rem;">Previously Uploaded Answer Sheets</h3>
+                
+                <div class="responses-list">
+                    <div class="response-item">
+                        <div class="response-info">
+                            <div class="response-name">Mathematics 2023 Fall - Answer Sheet</div>
+                            <div class="response-date">Uploaded on March 5, 2025</div>
+                        </div>
+                        <div class="response-actions">
+                            <a href="#" class="btn btn-secondary">Download</a>
+                        </div>
+                    </div>
+                    
+                    <div class="response-item">
+                        <div class="response-info">
+                            <div class="response-name">Physics 2024 Spring - Answer Sheet</div>
+                            <div class="response-date">Uploaded on February 15, 2025</div>
+                        </div>
+                        <div class="response-actions">
+                            <a href="#" class="btn btn-secondary">Download</a>
+                        </div>
+                    </div>
+                    
+                    <div class="response-item">
+                        <div class="response-info">
+                            <div class="response-name">Computer Science 2023 Spring - Answer Sheet</div>
+                            <div class="response-date">Uploaded on January 20, 2025</div>
+                        </div>
+                        <div class="response-actions">
+                            <a href="#" class="btn btn-secondary">Download</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Footer -->
+    <footer>
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3 class="footer-title">Academic Portal</h3>
+                <p>Providing comprehensive educational resources and support for students across various disciplines.</p>
+            </div>
+            
+            <div class="footer-section">
+                <h3 class="footer-title">Quick Links</h3>
+                <ul class="footer-links">
+                    <li><a href="#">Home</a></li>
+                    <li><a href="#">Subjects</a></li>
+                    <li><a href="#">Resources</a></li>
+                    <li><a href="#">Past Papers</a></li>
+                    <li><a href="#">Contact Us</a></li>
+                </ul>
+            </div>
+            
+            <div class="footer-section">
+                <h3 class="footer-title">Contact</h3>
+                <ul class="footer-links">
+                    <li>Email: info@academicportal.edu</li>
+                    <li>Phone: +1 (123) 456-7890</li>
+                    <li>Address: 123 Education St, Academic City</li>
+                </ul>
+            </div>
+        </div>
+        
+        <div class="footer-bottom">
+            <p>&copy; 2025 Academic Portal. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Toggle accordion sections
+            const accordionHeaders = document.querySelectorAll('.accordion-header');
+            
+            accordionHeaders.forEach(header => {
+                header.addEventListener('click', function() {
+                    const content = this.nextElementSibling;
+                    const icon = this.querySelector('span');
+                    
+                    // Toggle active class
+                    this.classList.toggle('active');
+                    
+                    // Toggle icon
+                    if (icon.textContent === '+') {
+                        icon.textContent = '-';
+                    } else {
+                        icon.textContent = '+';
+                    }
+                    
+                    // Toggle content visibility
+                    if (content.style.maxHeight) {
+                        content.style.maxHeight = null;
+                    } else {
+                        content.style.maxHeight = content.scrollHeight + "px";
+                    }
+                });
+            });
+            
+            // File upload functionality
+            const dropzone = document.getElementById('upload-dropzone');
+            const fileInput = document.getElementById('file-upload');
+            
+            dropzone.addEventListener('click', function() {
+                fileInput.click();
+            });
+            
+            fileInput.addEventListener('change', function() {
+                if (this.files && this.files[0]) {
+                    const fileName = this.files[0].name;

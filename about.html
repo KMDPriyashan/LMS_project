@@ -1,0 +1,746 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About Us - EduVista Learning Center</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: #f5f7fa;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .navbar {
+            background-color: rgba(102, 126, 234, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            position: fixed;
+            width: 100%;
+            z-index: 1000;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: white;
+            text-decoration: none;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+        }
+
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            color: #f0f0f0;
+            transform: translateY(-2px);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        .hero {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 8rem 0 4rem;
+            text-align: center;
+        }
+
+        .hero-content {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .hero h1 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+            opacity: 0.9;
+        }
+
+        .btn {
+            display: inline-block;
+            background: white;
+            color: #667eea;
+            padding: 0.8rem 2rem;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        section {
+            padding: 5rem 0;
+        }
+
+        .section-title {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .section-title h2 {
+            font-size: 2.5rem;
+            color: #333;
+            margin-bottom: 1rem;
+        }
+
+        .section-title p {
+            color: #666;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        .about-intro {
+            background: white;
+            padding: 4rem 0;
+        }
+
+        .about-intro-content {
+            display: flex;
+            align-items: center;
+            gap: 3rem;
+            flex-wrap: wrap;
+        }
+
+        .about-image {
+            flex: 1;
+            min-width: 300px;
+        }
+
+        .about-image img {
+            width: 100%;
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .about-text {
+            flex: 1;
+            min-width: 300px;
+        }
+
+        .about-text h2 {
+            color: #333;
+            font-size: 2.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .about-text p {
+            margin-bottom: 1.5rem;
+            color: #555;
+        }
+
+        .history {
+            background: #f9fafc;
+        }
+
+        .timeline {
+            position: relative;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .timeline::after {
+            content: '';
+            position: absolute;
+            width: 6px;
+            background-color: #667eea;
+            top: 0;
+            bottom: 0;
+            left: 50%;
+            margin-left: -3px;
+            border-radius: 10px;
+        }
+
+        .timeline-item {
+            padding: 10px 40px;
+            position: relative;
+            width: 50%;
+            box-sizing: border-box;
+            margin-bottom: 30px;
+        }
+
+        .timeline-item::after {
+            content: '';
+            position: absolute;
+            width: 25px;
+            height: 25px;
+            background-color: white;
+            border: 4px solid #667eea;
+            border-radius: 50%;
+            top: 15px;
+            z-index: 1;
+        }
+
+        .timeline-item-left {
+            left: 0;
+        }
+
+        .timeline-item-right {
+            left: 50%;
+        }
+
+        .timeline-item-left::after {
+            right: -16px;
+        }
+
+        .timeline-item-right::after {
+            left: -16px;
+        }
+
+        .timeline-content {
+            padding: 20px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        }
+
+        .timeline-content h3 {
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+
+        .core-values {
+            background: white;
+        }
+
+        .values-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 2rem;
+        }
+
+        .value-card {
+            background: white;
+            border-radius: 10px;
+            padding: 2rem;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .value-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .value-icon {
+            font-size: 2.5rem;
+            color: #667eea;
+            margin-bottom: 1rem;
+        }
+
+        .value-card h3 {
+            color: #333;
+            margin-bottom: 1rem;
+        }
+
+        .achievements {
+            background: #f9fafc;
+        }
+
+        .achievements-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .achievement-card {
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+        }
+
+        .achievement-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .achievement-card img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+        }
+
+        .achievement-content {
+            padding: 1.5rem;
+        }
+
+        .achievement-content h3 {
+            color: #333;
+            margin-bottom: 0.5rem;
+        }
+
+        .achievement-content p {
+            color: #666;
+        }
+
+        .testimonials {
+            background: white;
+        }
+
+        .testimonials-container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .testimonial-card {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            position: relative;
+        }
+
+        .testimonial-card:last-child {
+            margin-bottom: 0;
+        }
+
+        .testimonial-content {
+            font-style: italic;
+            margin-bottom: 1.5rem;
+            color: #555;
+        }
+
+        .testimonial-author {
+            display: flex;
+            align-items: center;
+        }
+
+        .testimonial-author img {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-right: 1rem;
+        }
+
+        .author-info h4 {
+            margin-bottom: 0.2rem;
+            color: #333;
+        }
+
+        .author-info p {
+            color: #667eea;
+            font-weight: 500;
+        }
+
+        .quote-icon {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            font-size: 3rem;
+            color: rgba(102, 126, 234, 0.1);
+        }
+
+        footer {
+            background: #2d3748;
+            color: white;
+            padding: 3rem 0;
+            text-align: center;
+        }
+
+        .footer-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .footer-logo {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+
+        .footer-links {
+            display: flex;
+            gap: 2rem;
+            margin: 1.5rem 0;
+        }
+
+        .footer-links a {
+            color: white;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .footer-links a:hover {
+            color: #667eea;
+        }
+
+        .copyright {
+            margin-top: 1.5rem;
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 0.9rem;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .animated {
+            animation: fadeIn 0.8s ease forwards;
+        }
+
+        .delay-1 {
+            animation-delay: 0.2s;
+        }
+
+        .delay-2 {
+            animation-delay: 0.4s;
+        }
+
+        .delay-3 {
+            animation-delay: 0.6s;
+        }
+
+        @media (max-width: 768px) {
+            .navbar {
+                padding: 1rem;
+            }
+            
+            .container {
+                padding: 0 1rem;
+            }
+            
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+            
+            .about-intro-content {
+                flex-direction: column;
+            }
+            
+            .timeline::after {
+                left: 31px;
+            }
+            
+            .timeline-item {
+                width: 100%;
+                padding-left: 70px;
+                padding-right: 25px;
+            }
+            
+            .timeline-item-right {
+                left: 0;
+            }
+            
+            .timeline-item-left::after, .timeline-item-right::after {
+                left: 15px;
+            }
+            
+            .section-title h2 {
+                font-size: 2rem;
+            }
+            
+            .nav-links {
+                gap: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar">
+        <a href="home.html" class="logo animated">EduVista</a>
+        <div class="nav-links">
+            <a href="home.html" class="animated delay-1">Home</a>
+            <a href="#" class="animated delay-1">About</a>
+            <a href="home.html#gallery" class="animated delay-2">Gallery</a>
+            <a href="home.html#projects" class="animated delay-2">Projects</a>
+            <a href="home.html#events" class="animated delay-3">Events</a>
+            <a href="home.html#staff" class="animated delay-3">Staff</a>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container hero-content">
+            <h1 class="animated">About Our Center</h1>
+            <p class="animated delay-1">Discover our story, mission, and commitment to educational excellence. Learn how we're transforming education through innovation, community, and student-centered learning.</p>
+        </div>
+    </section>
+
+    <!-- About Intro Section -->
+    <section class="about-intro">
+        <div class="container">
+            <div class="about-intro-content">
+                <div class="about-image">
+                    <img src="/api/placeholder/600/400" alt="EduVista Learning Center Campus">
+                </div>
+                <div class="about-text">
+                    <h2>Our Story</h2>
+                    <p>Founded in 2010, EduVista Learning Center began with a simple yet powerful vision: to create an educational environment where innovation, critical thinking, and personalized learning would flourish.</p>
+                    <p>Today, we've grown into a comprehensive learning center that serves students of all ages, providing them with the skills, knowledge, and mindset needed to thrive in an ever-changing world. Our approach combines traditional educational values with cutting-edge teaching methodologies, creating a unique learning experience that prepares students not just for exams, but for life.</p>
+                    <p>At EduVista, we believe that education extends beyond the classroom. Our programs are designed to foster creativity, problem-solving abilities, and a genuine love for learning that students carry with them throughout their lives.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- History Timeline Section -->
+    <section class="history">
+        <div class="container">
+            <div class="section-title">
+                <h2>Our Journey</h2>
+                <p>Explore the key milestones that have shaped EduVista into the institution it is today.</p>
+            </div>
+            <div class="timeline">
+                <div class="timeline-item timeline-item-left">
+                    <div class="timeline-content">
+                        <h3>2010 - Foundation</h3>
+                        <p>EduVista was established with just three classrooms and a small team of dedicated educators committed to reimagining education.</p>
+                    </div>
+                </div>
+                <div class="timeline-item timeline-item-right">
+                    <div class="timeline-content">
+                        <h3>2013 - Expansion</h3>
+                        <p>Moved to our current campus, expanding facilities to include science labs, a library, and technology centers.</p>
+                    </div>
+                </div>
+                <div class="timeline-item timeline-item-left">
+                    <div class="timeline-content">
+                        <h3>2016 - Innovation Hub</h3>
+                        <p>Launched our Innovation Hub, providing students with resources for robotics, programming, and digital creativity.</p>
+                    </div>
+                </div>
+                <div class="timeline-item timeline-item-right">
+                    <div class="timeline-content">
+                        <h3>2019 - Community Programs</h3>
+                        <p>Began our Community Outreach Initiative, extending educational opportunities to underserved populations.</p>
+                    </div>
+                </div>
+                <div class="timeline-item timeline-item-left">
+                    <div class="timeline-content">
+                        <h3>2022 - Digital Transformation</h3>
+                        <p>Implemented our comprehensive Digital Learning Platform, integrating technology with traditional learning methods.</p>
+                    </div>
+                </div>
+                <div class="timeline-item timeline-item-right">
+                    <div class="timeline-content">
+                        <h3>2025 - Present Day</h3>
+                        <p>Continuing to expand our programs and reach, with a focus on global educational partnerships and sustainability initiatives.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Core Values Section -->
+    <section class="core-values">
+        <div class="container">
+            <div class="section-title">
+                <h2>Our Core Values</h2>
+                <p>The principles that guide everything we do at EduVista Learning Center.</p>
+            </div>
+            <div class="values-container">
+                <div class="value-card">
+                    <div class="value-icon">★</div>
+                    <h3>Excellence</h3>
+                    <p>We strive for excellence in all aspects of education, from teaching methodologies to student support services.</p>
+                </div>
+                <div class="value-card">
+                    <div class="value-icon">❖</div>
+                    <h3>Innovation</h3>
+                    <p>We embrace new ideas, technologies, and approaches to enhance the learning experience and outcomes.</p>
+                </div>
+                <div class="value-card">
+                    <div class="value-icon">♦</div>
+                    <h3>Inclusivity</h3>
+                    <p>We create an environment where diversity is celebrated and every student feels valued and supported.</p>
+                </div>
+                <div class="value-card">
+                    <div class="value-icon">◎</div>
+                    <h3>Integrity</h3>
+                    <p>We uphold the highest standards of honesty, ethics, and transparency in all our interactions.</p>
+                </div>
+                <div class="value-card">
+                    <div class="value-icon">⟡</div>
+                    <h3>Empowerment</h3>
+                    <p>We empower students to take ownership of their learning journey and develop confidence in their abilities.</p>
+                </div>
+                <div class="value-card">
+                    <div class="value-icon">⚭</div>
+                    <h3>Community</h3>
+                    <p>We foster strong relationships among students, educators, families, and the broader community.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Achievements Section -->
+    <section class="achievements">
+        <div class="container">
+            <div class="section-title">
+                <h2>Our Achievements</h2>
+                <p>Celebrating our successes and recognition in the educational community.</p>
+            </div>
+            <div class="achievements-container">
+                <div class="achievement-card">
+                    <img src="/api/placeholder/400/300" alt="Educational Excellence Award">
+                    <div class="achievement-content">
+                        <h3>Educational Excellence Award</h3>
+                        <p>Recognized for outstanding contributions to innovative teaching methodologies and student outcomes.</p>
+                    </div>
+                </div>
+                <div class="achievement-card">
+                    <img src="/api/placeholder/400/300" alt="STEM Education Leadership">
+                    <div class="achievement-content">
+                        <h3>STEM Education Leadership</h3>
+                        <p>Named a leading institution in science, technology, engineering, and mathematics education.</p>
+                    </div>
+                </div>
+                <div class="achievement-card">
+                    <img src="/api/placeholder/400/300" alt="Community Impact Recognition">
+                    <div class="achievement-content">
+                        <h3>Community Impact Recognition</h3>
+                        <p>Honored for our outreach programs and commitment to extending educational opportunities.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials Section -->
+    <section class="testimonials">
+        <div class="container">
+            <div class="section-title">
+                <h2>What People Say</h2>
+                <p>Hear from our students, parents, and community members about their EduVista experience.</p>
+            </div>
+            <div class="testimonials-container">
+                <div class="testimonial-card">
+                    <div class="testimonial-content">
+                        <p>EduVista transformed my daughter's educational journey. The personalized approach and dedicated teachers helped her discover her passion for science and build confidence in her abilities.</p>
+                    </div>
+                    <div class="testimonial-author">
+                        <img src="/api/placeholder/100/100" alt="Parent">
+                        <div class="author-info">
+                            <h4>Jennifer Parker</h4>
+                            <p>Parent</p>
+                        </div>
+                    </div>
+                    <div class="quote-icon">❝</div>
+                </div>
+                <div class="testimonial-card">
+                    <div class="testimonial-content">
+                        <p>As a former student, I can say that EduVista prepared me not just academically but also equipped me with critical thinking and problem-solving skills that have been invaluable in my career.</p>
+                    </div>
+                    <div class="testimonial-author">
+                        <img src="/api/placeholder/100/100" alt="Alumni">
+                        <div class="author-info">
+                            <h4>David Washington</h4>
+                            <p>Alumni, Class of 2018</p>
+                        </div>
+                    </div>
+                    <div class="quote-icon">❝</div>
+                </div>
+                <div class="testimonial-card">
+                    <div class="testimonial-content">
+                        <p>Partnering with EduVista on community education initiatives has been incredibly rewarding. Their commitment to quality education extends far beyond their campus walls.</p>
+                    </div>
+                    <div class="testimonial-author">
+                        <img src="/api/placeholder/100/100" alt="Community Partner">
+                        <div class="author-info">
+                            <h4>Maria Gonzalez</h4>
+                            <p>Community Partner</p>
+                        </div>
+                    </div>
+                    <div class="quote-icon">❝</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container footer-content">
+            <div class="footer-logo">EduVista</div>
+            <p>Empowering minds, building futures.</p>
+            <div class="footer-links">
+                <a href="home.html">Home</a>
+                <a href="#">About</a>
+                <a href="home.html#gallery">Gallery</a>
+                <a href="home.html#projects">Projects</a>
+                <a href="home.html#events">Events</a>
+                <a href="home.html#staff">Staff</a>
+                <a href="#">Contact</a>
+            </div>
+            <div class="copyright">
+                &copy; 2025 EduVista Learning Center. All rights reserved.
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Smooth scrolling for anchor links
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    
+                    const targetId = this.getAttribute('href');
+                    if(targetId === '#') return;
+                    
+                    const targetElement = document.querySelector(targetId);
+                    if(targetElement) {
+                        window.scrollTo({
+                            top: targetElement.offsetTop - 70,
+                            behavior: 'smooth'
+                        });
+                    }
+                });
+            });
+
+            // Animate elements when they come into view
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('animated');
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, { threshold: 0.1 });
+
+            document.querySelectorAll('.section-title, .about-image, .about-text, .timeline-item, .value-card, .achievement-card, .testimonial-card').forEach(element => {
+                observer.observe(element);
+            });
+        });
+    </script>
+</body>
+</html>
