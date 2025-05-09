@@ -133,6 +133,24 @@
             text-decoration: underline;
         }
 
+        #message {
+            text-align: center;
+            margin-top: 1rem;
+            padding: 0.5rem;
+            border-radius: 5px;
+            display: none;
+        }
+
+        .success {
+            background-color: rgba(76, 175, 80, 0.2);
+            color: #2e7d32;
+        }
+
+        .error {
+            background-color: rgba(244, 67, 54, 0.2);
+            color: #c62828;
+        }
+
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(20px); }
             to { opacity: 1; transform: translateY(0); }
@@ -185,22 +203,23 @@
     <div class="container">
         <div class="form-container animated float">
             <h2>Create Account</h2>
-            <form>
+            <form id="signupForm">
                 <div class="form-group">
-                    <input type="text" class="form-control" placeholder="Full Name" required>
+                    <input type="text" class="form-control" id="fullname" name="fullname" placeholder="Full Name" required>
                 </div>
                 <div class="form-group">
-                    <input type="email" class="form-control" placeholder="Email Address" required>
+                    <input type="email" class="form-control" id="email" name="email" placeholder="Email Address" required>
                 </div>
                 <div class="form-group">
-                    <input type="password" class="form-control" placeholder="Password" required>
+                    <input type="password" class="form-control" id="password" name="password" placeholder="Password" required>
                 </div>
                 <div class="form-group">
-                    <input type="password" class="form-control" placeholder="Confirm Password" required>
+                    <input type="password" class="form-control" id="com_password" name="com_password" placeholder="Confirm Password" required>
                 </div>
-                <button type="submit" class="btn-submit">Sign Up</button>
+                <button type="submit" class="btn-submit" name="submit">Sign Up</button>
             </form>
-            <a href="#" class="login-link">Already have an account? Login</a>
+            <div id="message"></div>
+            <a href="login.html" class="login-link">Already have an account? Login</a>
         </div>
     </div>
 
@@ -212,6 +231,67 @@
                 input.addEventListener('focus', function() {
                     this.classList.add('animated');
                 });
+            });
+
+            // Handle form submission
+            const signupForm = document.getElementById('signupForm');
+            const messageDiv = document.getElementById('message');
+
+            signupForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                const fullname = document.getElementById('fullname').value;
+                const email = document.getElementById('email').value;
+                const password = document.getElementById('password').value;
+                const confirmPassword = document.getElementById('com_password').value;
+                
+                // Validate passwords match
+                if (password !== confirmPassword) {
+                    messageDiv.textContent = "Passwords do not match!";
+                    messageDiv.className = "error";
+                    messageDiv.style.display = "block";
+                    return;
+                }
+                
+                // Store user data in localStorage
+                const userData = {
+                    fullname: fullname,
+                    email: email,
+                    password: password
+                };
+                
+                // Check if users array already exists in localStorage
+                let users = [];
+                const storedUsers = localStorage.getItem('users');
+                
+                if (storedUsers) {
+                    users = JSON.parse(storedUsers);
+                    
+                    // Check if email already exists
+                    const emailExists = users.some(user => user.email === email);
+                    if (emailExists) {
+                        messageDiv.textContent = "Email already registered! Please use a different email.";
+                        messageDiv.className = "error";
+                        messageDiv.style.display = "block";
+                        return;
+                    }
+                }
+                
+                // Add new user to array
+                users.push(userData);
+                
+                // Save updated users array to localStorage
+                localStorage.setItem('users', JSON.stringify(users));
+                
+                // Show success message
+                messageDiv.textContent = "Account created successfully! Redirecting to login...";
+                messageDiv.className = "success";
+                messageDiv.style.display = "block";
+                
+                // Redirect to login page after 2 seconds
+                setTimeout(function() {
+                    window.location.href = "login.html";
+                }, 2000);
             });
         });
     </script>
