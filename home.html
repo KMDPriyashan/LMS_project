@@ -16,6 +16,7 @@
             background: #f5f7fa;
             color: #333;
             line-height: 1.6;
+            overflow-x: hidden;
         }
 
         .navbar {
@@ -48,11 +49,44 @@
             text-decoration: none;
             font-weight: 500;
             transition: all 0.3s ease;
+            padding: 0.5rem 0;
         }
 
         .nav-links a:hover {
             color: #f0f0f0;
             transform: translateY(-2px);
+        }
+
+        /* Mobile Menu Styles */
+        .menu-toggle {
+            display: none;
+            flex-direction: column;
+            justify-content: space-between;
+            width: 30px;
+            height: 21px;
+            cursor: pointer;
+            z-index: 1001;
+        }
+
+        .menu-toggle span {
+            display: block;
+            height: 3px;
+            width: 100%;
+            background: white;
+            border-radius: 3px;
+            transition: all 0.3s ease;
+        }
+
+        .menu-toggle.active span:nth-child(1) {
+            transform: translateY(9px) rotate(45deg);
+        }
+
+        .menu-toggle.active span:nth-child(2) {
+            opacity: 0;
+        }
+
+        .menu-toggle.active span:nth-child(3) {
+            transform: translateY(-9px) rotate(-45deg);
         }
 
         .container {
@@ -351,6 +385,8 @@
             display: flex;
             gap: 2rem;
             margin: 1.5rem 0;
+            flex-wrap: wrap;
+            justify-content: center;
         }
 
         .footer-links a {
@@ -390,31 +426,159 @@
             animation-delay: 0.6s;
         }
 
-        @media (max-width: 768px) {
-            .navbar {
-                padding: 1rem;
-            }
-            
-            .container {
-                padding: 0 1rem;
+        /* Mobile Responsive Styles */
+        @media (max-width: 992px) {
+            .hero {
+                padding: 7rem 0 3rem;
             }
             
             .hero h1 {
                 font-size: 2.5rem;
             }
             
-            .vm-container, 
-            .projects-container, 
-            .events-container {
-                grid-template-columns: 1fr;
-            }
-            
             .section-title h2 {
                 font-size: 2rem;
             }
             
+            .vm-box, .project-card, .event-card, .staff-card {
+                min-width: 100%;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .navbar {
+                padding: 1rem;
+            }
+            
+            .container {
+                padding: 0 1.5rem;
+            }
+            
+            .menu-toggle {
+                display: flex;
+            }
+            
             .nav-links {
+                position: fixed;
+                top: 70px;
+                left: -100%;
+                width: 100%;
+                height: calc(100vh - 70px);
+                background-color: rgba(102, 126, 234, 0.98);
+                flex-direction: column;
+                align-items: center;
+                justify-content: flex-start;
+                padding: 2rem 0;
+                gap: 1.5rem;
+                transition: all 0.3s ease;
+            }
+            
+            .nav-links.active {
+                left: 0;
+            }
+            
+            .nav-links a {
+                font-size: 1.2rem;
+                padding: 0.8rem 1.5rem;
+            }
+            
+            .hero {
+                padding: 6rem 0 2.5rem;
+            }
+            
+            .hero h1 {
+                font-size: 2.2rem;
+            }
+            
+            .hero p {
+                font-size: 1.1rem;
+            }
+            
+            .btn {
+                padding: 0.7rem 1.8rem;
+                font-size: 0.95rem;
+            }
+            
+            section {
+                padding: 3.5rem 0;
+            }
+            
+            .section-title h2 {
+                font-size: 1.8rem;
+            }
+            
+            .section-title p {
+                font-size: 0.95rem;
+            }
+            
+            .vm-box, .project-content, .event-content, .staff-content {
+                padding: 1.5rem;
+            }
+            
+            .vm-box h3, .project-content h3, .event-content h3, .staff-content h3 {
+                font-size: 1.3rem;
+            }
+            
+            .footer-links {
+                gap: 1.5rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .hero {
+                padding: 5rem 0 2rem;
+            }
+            
+            .hero h1 {
+                font-size: 1.8rem;
+            }
+            
+            .hero p {
+                font-size: 1rem;
+                margin-bottom: 1.5rem;
+            }
+            
+            .section-title h2 {
+                font-size: 1.6rem;
+                margin-bottom: 0.8rem;
+            }
+            
+            .section-title p {
+                font-size: 0.9rem;
+            }
+            
+            section {
+                padding: 3rem 0;
+            }
+            
+            .container {
+                padding: 0 1.2rem;
+            }
+            
+            .gallery-container, .projects-container, .events-container, .staff-container {
+                grid-template-columns: 1fr;
+                gap: 1.2rem;
+            }
+            
+            .gallery-item img, .project-card img, .event-card img {
+                height: 180px;
+            }
+            
+            .staff-card img {
+                height: 220px;
+            }
+            
+            .footer-links {
+                flex-direction: column;
                 gap: 1rem;
+            }
+            
+            .footer-logo {
+                font-size: 1.5rem;
+            }
+            
+            .copyright {
+                font-size: 0.8rem;
             }
         }
     </style>
@@ -423,6 +587,11 @@
     <!-- Navbar -->
     <nav class="navbar">
         <a href="#" class="logo animated">EduVista</a>
+        <div class="menu-toggle">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
         <div class="nav-links">
             <a href="dataentry.html" class="animated delay-1">Data Entry</a>
             <a href="#about" class="animated delay-1">About</a>
@@ -639,6 +808,23 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
+            // Mobile menu toggle
+            const menuToggle = document.querySelector('.menu-toggle');
+            const navLinks = document.querySelector('.nav-links');
+            
+            menuToggle.addEventListener('click', function() {
+                this.classList.toggle('active');
+                navLinks.classList.toggle('active');
+            });
+            
+            // Close mobile menu when clicking a link
+            document.querySelectorAll('.nav-links a').forEach(link => {
+                link.addEventListener('click', function() {
+                    menuToggle.classList.remove('active');
+                    navLinks.classList.remove('active');
+                });
+            });
+
             // Smooth scrolling for anchor links
             document.querySelectorAll('a[href^="#"]').forEach(anchor => {
                 anchor.addEventListener('click', function(e) {
@@ -670,6 +856,19 @@
             document.querySelectorAll('.section-title, .vm-box, .gallery-item, .project-card, .event-card, .staff-card').forEach(element => {
                 observer.observe(element);
             });
+            
+            // Adjust hero padding based on navbar height
+            function adjustHeroPadding() {
+                const navbar = document.querySelector('.navbar');
+                const hero = document.querySelector('.hero');
+                if (navbar && hero) {
+                    hero.style.paddingTop = `${navbar.offsetHeight}px`;
+                }
+            }
+            
+            // Run on load and resize
+            adjustHeroPadding();
+            window.addEventListener('resize', adjustHeroPadding);
         });
     </script>
 </body>
