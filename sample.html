@@ -1,0 +1,1534 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Marks Management System</title>
+
+    <!-- Correct PDF Generation Libraries -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.28/jspdf.plugin.autotable.min.js"></script>
+
+    <!-- Optional HTML to Canvas (if you need to capture DOM elements) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #667eea;
+            --secondary-color: #764ba2;
+            --accent-color: #ff6b6b;
+            --light-color: #f8f9fa;
+            --dark-color: #343a40;
+            --success-color: #28a745;
+            --info-color: #17a2b8;
+            --warning-color: #ffc107;
+            --danger-color: #dc3545;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #f5f7fa 0%, #e4e8f0 100%);
+            color: #333;
+            line-height: 1.6;
+            overflow-x: hidden;
+            min-height: 100vh;
+        }
+
+        @keyframes gradientBG {
+            0% {
+                background-position: 0% 50%;
+            }
+
+            50% {
+                background-position: 100% 50%;
+            }
+
+            100% {
+                background-position: 0% 50%;
+            }
+        }
+
+        .navbar {
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            position: fixed;
+            width: 100%;
+            z-index: 1000;
+            animation: gradientBG 10s ease infinite;
+            background-size: 200% 200%;
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: white;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .logo i {
+            font-size: 1.5rem;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+        }
+
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            padding: 0.5rem 0;
+            position: relative;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: 0;
+            left: 0;
+            background-color: white;
+            transition: width 0.3s ease;
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        .nav-links a:hover {
+            transform: translateY(-2px);
+        }
+
+        /* Mobile Menu Styles */
+        .menu-toggle {
+            display: none;
+            flex-direction: column;
+            justify-content: space-between;
+            width: 30px;
+            height: 21px;
+            cursor: pointer;
+            z-index: 1001;
+        }
+
+        .menu-toggle span {
+            display: block;
+            height: 3px;
+            width: 100%;
+            background: white;
+            border-radius: 3px;
+            transition: all 0.3s ease;
+        }
+
+        .menu-toggle.active span:nth-child(1) {
+            transform: translateY(9px) rotate(45deg);
+        }
+
+        .menu-toggle.active span:nth-child(2) {
+            opacity: 0;
+        }
+
+        .menu-toggle.active span:nth-child(3) {
+            transform: translateY(-9px) rotate(-45deg);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        .hero {
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            color: white;
+            padding: 8rem 0 4rem;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiPjxkZWZzPjxwYXR0ZXJuIGlkPSJwYXR0ZXJuIiB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHBhdHRlcm5Vbml0cz0idXNlclNwYWNlT25Vc2UiIHBhdHRlcm5UcmFuc2Zvcm09InJvdGF0ZSg0NSkiPjxyZWN0IHdpZHRoPSIyMCIgaGVpZ2h0PSIyMCIgZmlsbD0icmdiYSgyNTUsMjU1LDI1NSwwLjA1KSIvPjwvcGF0dGVybj48L2RlZnM+PHJlY3QgeD0iMCIgeT0iMCIgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgZmlsbD0idXJsKCNwYXR0ZXJuKSIvPjwvc3ZnPg==');
+            opacity: 0.3;
+        }
+
+        .hero-content {
+            max-width: 800px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero h1 {
+            font-size: 3.5rem;
+            margin-bottom: 1.5rem;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .hero p {
+            font-size: 1.3rem;
+            margin-bottom: 2.5rem;
+            opacity: 0.9;
+        }
+
+        .btn {
+            display: inline-block;
+            background: white;
+            color: var(--primary-color);
+            padding: 0.9rem 2.5rem;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            border: none;
+            cursor: pointer;
+            font-size: 1rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: 0.5s;
+        }
+
+        .btn:hover::before {
+            left: 100%;
+        }
+
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+        }
+
+        .btn-primary {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .btn-secondary {
+            background: var(--secondary-color);
+            color: white;
+        }
+
+        .btn-accent {
+            background: var(--accent-color);
+            color: white;
+        }
+
+        .btn-outline {
+            background: transparent;
+            color: white;
+            border: 2px solid white;
+        }
+
+        .btn-outline:hover {
+            background: white;
+            color: var(--primary-color);
+        }
+
+        section {
+            padding: 5rem 0;
+        }
+
+        .section-title {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .section-title h2 {
+            font-size: 2.8rem;
+            color: var(--dark-color);
+            margin-bottom: 1rem;
+            position: relative;
+            display: inline-block;
+        }
+
+        .section-title h2::after {
+            content: '';
+            position: absolute;
+            width: 60%;
+            height: 4px;
+            bottom: -10px;
+            left: 20%;
+            background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+            border-radius: 2px;
+        }
+
+        .section-title p {
+            color: #666;
+            max-width: 700px;
+            margin: 0 auto;
+            font-size: 1.1rem;
+        }
+
+        .form-container {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            padding: 3rem;
+            margin-bottom: 3rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-row {
+            display: flex;
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .form-col {
+            flex: 1;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: var(--dark-color);
+        }
+
+        input,
+        select {
+            width: 100%;
+            padding: 0.8rem 1rem;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        input:focus,
+        select:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.2);
+        }
+
+        .marks-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 2rem 0;
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        }
+
+        .marks-table th,
+        .marks-table td {
+            padding: 1rem;
+            text-align: center;
+            border: 1px solid #eee;
+        }
+
+        .marks-table th {
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            color: white;
+            font-weight: 500;
+        }
+
+        .marks-table tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        .marks-table tr:hover {
+            background-color: #f1f1f1;
+        }
+
+        .results-container {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            padding: 3rem;
+            margin-top: 2rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .results-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 8px;
+            height: 100%;
+            background: linear-gradient(to bottom, var(--primary-color), var(--secondary-color));
+        }
+
+        .results-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .result-card {
+            background: white;
+            border-radius: 10px;
+            padding: 1.5rem;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+            border-top: 4px solid var(--primary-color);
+        }
+
+        .result-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
+
+        .result-card h3 {
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+            font-size: 1.2rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .result-card h3 i {
+            font-size: 1.3rem;
+        }
+
+        .result-value {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--dark-color);
+        }
+
+        .result-label {
+            font-size: 0.9rem;
+            color: #666;
+            margin-top: 0.3rem;
+        }
+
+        .download-section {
+            text-align: center;
+            margin-top: 3rem;
+        }
+
+        .download-card {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            padding: 2rem;
+            display: inline-block;
+            max-width: 600px;
+            width: 100%;
+            margin-bottom: 3rem;
+        }
+
+        .download-card h3 {
+            font-size: 1.5rem;
+            color: var(--dark-color);
+            margin-bottom: 1rem;
+        }
+
+        .download-card p {
+            color: #666;
+            margin-bottom: 1.5rem;
+        }
+
+        .subject-results {
+            margin-top: 2rem;
+        }
+
+        .subject-card {
+            background: white;
+            border-radius: 10px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            border-left: 4px solid var(--primary-color);
+        }
+
+        .subject-card h4 {
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+            font-size: 1.1rem;
+        }
+
+        .subject-details {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1rem;
+        }
+
+        .subject-detail {
+            background: #f8f9fa;
+            padding: 0.8rem;
+            border-radius: 8px;
+        }
+
+        .subject-detail-label {
+            font-size: 0.8rem;
+            color: #666;
+            margin-bottom: 0.3rem;
+        }
+
+        .subject-detail-value {
+            font-weight: 600;
+            color: var(--dark-color);
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes slideInLeft {
+            from {
+                opacity: 0;
+                transform: translateX(-50px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes slideInRight {
+            from {
+                opacity: 0;
+                transform: translateX(50px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+            }
+
+            50% {
+                transform: scale(1.05);
+            }
+
+            100% {
+                transform: scale(1);
+            }
+        }
+
+        .animated {
+            animation: fadeIn 0.8s ease forwards;
+        }
+
+        .slide-left {
+            animation: slideInLeft 0.8s ease forwards;
+        }
+
+        .slide-right {
+            animation: slideInRight 0.8s ease forwards;
+        }
+
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+
+        .delay-1 {
+            animation-delay: 0.2s;
+        }
+
+        .delay-2 {
+            animation-delay: 0.4s;
+        }
+
+        .delay-3 {
+            animation-delay: 0.6s;
+        }
+
+        .delay-4 {
+            animation-delay: 0.8s;
+        }
+
+        /* Mobile Responsive Styles */
+        @media (max-width: 992px) {
+            .hero {
+                padding: 7rem 0 3rem;
+            }
+
+            .hero h1 {
+                font-size: 2.8rem;
+            }
+
+            .section-title h2 {
+                font-size: 2.2rem;
+            }
+
+            .form-row {
+                flex-direction: column;
+                gap: 0;
+            }
+
+            .form-col {
+                margin-bottom: 1rem;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .navbar {
+                padding: 1rem;
+            }
+
+            .container {
+                padding: 0 1.5rem;
+            }
+
+            .menu-toggle {
+                display: flex;
+            }
+
+            .nav-links {
+                position: fixed;
+                top: 70px;
+                left: -100%;
+                width: 100%;
+                height: calc(100vh - 70px);
+                background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+                flex-direction: column;
+                align-items: center;
+                justify-content: flex-start;
+                padding: 2rem 0;
+                gap: 1.5rem;
+                transition: all 0.3s ease;
+            }
+
+            .nav-links.active {
+                left: 0;
+            }
+
+            .nav-links a {
+                font-size: 1.2rem;
+                padding: 0.8rem 1.5rem;
+            }
+
+            .hero {
+                padding: 6rem 0 2.5rem;
+            }
+
+            .hero h1 {
+                font-size: 2.2rem;
+            }
+
+            .hero p {
+                font-size: 1.1rem;
+            }
+
+            .btn {
+                padding: 0.8rem 1.8rem;
+                font-size: 0.95rem;
+            }
+
+            section {
+                padding: 3.5rem 0;
+            }
+
+            .section-title h2 {
+                font-size: 1.8rem;
+            }
+
+            .section-title p {
+                font-size: 0.95rem;
+            }
+
+            .form-container,
+            .results-container {
+                padding: 2rem;
+            }
+
+            .marks-table th,
+            .marks-table td {
+                padding: 0.8rem;
+                font-size: 0.9rem;
+            }
+
+            .result-card {
+                padding: 1.2rem;
+            }
+
+            .result-value {
+                font-size: 1.5rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .hero {
+                padding: 5rem 0 2rem;
+            }
+
+            .hero h1 {
+                font-size: 1.8rem;
+            }
+
+            .hero p {
+                font-size: 1rem;
+                margin-bottom: 1.5rem;
+            }
+
+            .section-title h2 {
+                font-size: 1.6rem;
+                margin-bottom: 0.8rem;
+            }
+
+            .section-title p {
+                font-size: 0.9rem;
+            }
+
+            section {
+                padding: 3rem 0;
+            }
+
+            .container {
+                padding: 0 1.2rem;
+            }
+
+            .form-container,
+            .results-container {
+                padding: 1.5rem;
+            }
+
+            .results-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .download-card {
+                padding: 1.5rem;
+            }
+
+            .download-card h3 {
+                font-size: 1.3rem;
+            }
+
+            .subject-details {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+
+<body>
+    <!-- Navbar -->
+    <nav class="navbar">
+        <a href="#" class="logo animated">
+            <i class="fas fa-graduation-cap"></i> EduTrack
+        </a>
+        <div class="menu-toggle">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+        <div class="nav-links">
+            <a href="#marks-form" class="animated delay-1">Marks Entry</a>
+            <a href="#results" class="animated delay-1">Results</a>
+            <a href="#download" class="animated delay-2">Download</a>
+            <a href="#about" class="animated delay-2">About</a>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container hero-content">
+            <h1 class="animated">Student Marks Management</h1>
+            <p class="animated delay-1">Track, analyze, and manage student academic performance with our comprehensive
+                marks management system.</p>
+            <a href="#marks-form" class="btn btn-outline animated delay-2">Enter Marks Now</a>
+        </div>
+    </section>
+
+    <!-- Marks Form Section -->
+    <section id="marks-form" class="form-section">
+        <div class="container">
+            <div class="section-title slide-left">
+                <h2>Student Marks Entry</h2>
+                <p>Enter student details and subject marks to calculate total, average, and generate reports.</p>
+            </div>
+
+            <div class="form-container slide-right delay-1">
+                <form id="studentMarksForm">
+                    <div class="form-row">
+                        <div class="form-col">
+                            <div class="form-group">
+                                <label for="studentName">Student Name</label>
+                                <input type="text" id="studentName" name="studentName" required>
+                            </div>
+                        </div>
+                        <div class="form-col">
+                            <div class="form-group">
+                                <label for="studentId">Student ID</label>
+                                <input type="text" id="studentId" name="studentId" required>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-col">
+                            <div class="form-group">
+                                <label for="className">Class</label>
+                                <select id="className" name="className" required>
+                                    <option value="">Select Class</option>
+                                    <option value="Grade 6">Grade 6</option>
+                                    <option value="Grade 7">Grade 7</option>
+                                    <option value="Grade 8">Grade 8</option>
+                                    <option value="Grade 9">Grade 9</option>
+                                    <option value="Grade 10">Grade 10</option>
+                                    <option value="Grade 11">Grade 11</option>
+                                    <option value="Grade 12">Grade 12</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-col">
+                            <div class="form-group">
+                                <label for="classTeacher">Class Teacher</label>
+                                <input type="text" id="classTeacher" name="classTeacher" required>
+                            </div>
+                        </div>
+                        <div class="form-col">
+                            <div class="form-group">
+                                <label for="academicYear">Academic Year</label>
+                                <input type="text" id="academicYear" name="academicYear" required>
+                            </div>
+                        </div>
+                    </div>
+
+                    <h3 style="margin: 2rem 0 1rem; color: var(--primary-color);">Subject Marks</h3>
+
+                    <table class="marks-table">
+                        <thead>
+                            <tr>
+                                <th>Subject</th>
+                                <th>Paper 1</th>
+                                <th>Paper 2</th>
+                                <th>Total</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Mathematics</td>
+                                <td><input type="number" id="mathsPaper1" name="mathsPaper1" min="0" max="100" required>
+                                </td>
+                                <td><input type="number" id="mathsPaper2" name="mathsPaper2" min="0" max="100" required>
+                                </td>
+                                <td id="mathsTotal">-</td>
+                            </tr>
+                            <tr>
+                                <td>Science</td>
+                                <td><input type="number" id="sciencePaper1" name="sciencePaper1" min="0" max="100"
+                                        required></td>
+                                <td><input type="number" id="sciencePaper2" name="sciencePaper2" min="0" max="100"
+                                        required></td>
+                                <td id="scienceTotal">-</td>
+                            </tr>
+                            <tr>
+                                <td>English</td>
+                                <td><input type="number" id="englishPaper1" name="englishPaper1" min="0" max="100"
+                                        required></td>
+                                <td><input type="number" id="englishPaper2" name="englishPaper2" min="0" max="100"
+                                        required></td>
+                                <td id="englishTotal">-</td>
+                            </tr>
+                            <tr>
+                                <td>History</td>
+                                <td><input type="number" id="historyPaper1" name="historyPaper1" min="0" max="100"
+                                        required></td>
+                                <td><input type="number" id="historyPaper2" name="historyPaper2" min="0" max="100"
+                                        required></td>
+                                <td id="historyTotal">-</td>
+                            </tr>
+                            <tr>
+                                <td>Geography</td>
+                                <td><input type="number" id="geographyPaper1" name="geographyPaper1" min="0" max="100"
+                                        required></td>
+                                <td><input type="number" id="geographyPaper2" name="geographyPaper2" min="0" max="100"
+                                        required></td>
+                                <td id="geographyTotal">-</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <div style="text-align: center; margin-top: 2rem;">
+                        <button type="submit" class="btn btn-primary">Calculate Results</button>
+                        <button type="reset" class="btn btn-outline" style="margin-left: 1rem;">Reset Form</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- Results Section -->
+    <section id="results" class="results-section">
+        <div class="container">
+            <div class="section-title slide-left">
+                <h2>Student Results</h2>
+                <p>View calculated results based on entered marks.</p>
+            </div>
+
+            <div class="results-container slide-right delay-1" id="resultsDisplay" style="display: none;">
+                <h3 id="resultsTitle">Results for <span id="studentNameDisplay"></span></h3>
+                <p id="studentInfoDisplay"></p>
+
+                <div class="results-grid">
+                    <div class="result-card">
+                        <h3><i class="fas fa-calculator"></i> Total Marks</h3>
+                        <div class="result-value" id="totalMarks">-</div>
+                        <div class="result-label">Sum of all subject marks</div>
+                    </div>
+                    <div class="result-card">
+                        <h3><i class="fas fa-chart-line"></i> Average Score</h3>
+                        <div class="result-value" id="averageMarks">-</div>
+                        <div class="result-label">Average across all subjects</div>
+                    </div>
+                    <div class="result-card">
+                        <h3><i class="fas fa-medal"></i> Highest Subject</h3>
+                        <div class="result-value" id="highestSubject">-</div>
+                        <div class="result-label">Subject with highest marks</div>
+                    </div>
+                    <div class="result-card">
+                        <h3><i class="fas fa-user-tie"></i> Class Teacher</h3>
+                        <div class="result-value" id="classTeacherDisplay">-</div>
+                        <div class="result-label">Responsible teacher</div>
+                    </div>
+                </div>
+
+                <div class="subject-results">
+                    <h3 style="margin: 2rem 0 1rem; color: var(--primary-color);">Subject-wise Breakdown</h3>
+
+                    <div class="subject-card" id="mathsCard">
+                        <h4>Mathematics</h4>
+                        <div class="subject-details">
+                            <div class="subject-detail">
+                                <div class="subject-detail-label">Paper 1</div>
+                                <div class="subject-detail-value" id="mathsPaper1Display">-</div>
+                            </div>
+                            <div class="subject-detail">
+                                <div class="subject-detail-label">Paper 2</div>
+                                <div class="subject-detail-value" id="mathsPaper2Display">-</div>
+                            </div>
+                            <div class="subject-detail">
+                                <div class="subject-detail-label">Total</div>
+                                <div class="subject-detail-value" id="mathsTotalDisplay">-</div>
+                            </div>
+                            <div class="subject-detail">
+                                <div class="subject-detail-label">Percentage</div>
+                                <div class="subject-detail-value" id="mathsPercentage">-</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="subject-card" id="scienceCard">
+                        <h4>Science</h4>
+                        <div class="subject-details">
+                            <div class="subject-detail">
+                                <div class="subject-detail-label">Paper 1</div>
+                                <div class="subject-detail-value" id="sciencePaper1Display">-</div>
+                            </div>
+                            <div class="subject-detail">
+                                <div class="subject-detail-label">Paper 2</div>
+                                <div class="subject-detail-value" id="sciencePaper2Display">-</div>
+                            </div>
+                            <div class="subject-detail">
+                                <div class="subject-detail-label">Total</div>
+                                <div class="subject-detail-value" id="scienceTotalDisplay">-</div>
+                            </div>
+                            <div class="subject-detail">
+                                <div class="subject-detail-label">Percentage</div>
+                                <div class="subject-detail-value" id="sciencePercentage">-</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="subject-card" id="englishCard">
+                        <h4>English</h4>
+                        <div class="subject-details">
+                            <div class="subject-detail">
+                                <div class="subject-detail-label">Paper 1</div>
+                                <div class="subject-detail-value" id="englishPaper1Display">-</div>
+                            </div>
+                            <div class="subject-detail">
+                                <div class="subject-detail-label">Paper 2</div>
+                                <div class="subject-detail-value" id="englishPaper2Display">-</div>
+                            </div>
+                            <div class="subject-detail">
+                                <div class="subject-detail-label">Total</div>
+                                <div class="subject-detail-value" id="englishTotalDisplay">-</div>
+                            </div>
+                            <div class="subject-detail">
+                                <div class="subject-detail-label">Percentage</div>
+                                <div class="subject-detail-value" id="englishPercentage">-</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="subject-card" id="historyCard">
+                        <h4>History</h4>
+                        <div class="subject-details">
+                            <div class="subject-detail">
+                                <div class="subject-detail-label">Paper 1</div>
+                                <div class="subject-detail-value" id="historyPaper1Display">-</div>
+                            </div>
+                            <div class="subject-detail">
+                                <div class="subject-detail-label">Paper 2</div>
+                                <div class="subject-detail-value" id="historyPaper2Display">-</div>
+                            </div>
+                            <div class="subject-detail">
+                                <div class="subject-detail-label">Total</div>
+                                <div class="subject-detail-value" id="historyTotalDisplay">-</div>
+                            </div>
+                            <div class="subject-detail">
+                                <div class="subject-detail-label">Percentage</div>
+                                <div class="subject-detail-value" id="historyPercentage">-</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="subject-card" id="geographyCard">
+                        <h4>Geography</h4>
+                        <div class="subject-details">
+                            <div class="subject-detail">
+                                <div class="subject-detail-label">Paper 1</div>
+                                <div class="subject-detail-value" id="geographyPaper1Display">-</div>
+                            </div>
+                            <div class="subject-detail">
+                                <div class="subject-detail-label">Paper 2</div>
+                                <div class="subject-detail-value" id="geographyPaper2Display">-</div>
+                            </div>
+                            <div class="subject-detail">
+                                <div class="subject-detail-label">Total</div>
+                                <div class="subject-detail-value" id="geographyTotalDisplay">-</div>
+                            </div>
+                            <div class="subject-detail">
+                                <div class="subject-detail-label">Percentage</div>
+                                <div class="subject-detail-value" id="geographyPercentage">-</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Download Section -->
+    <section id="download" class="download-section">
+        <div class="container">
+            <div class="section-title slide-left">
+                <h2>Download Report</h2>
+                <p>Generate and download a PDF report of the student's marks and results.</p>
+            </div>
+
+            <div class="download-card slide-right delay-1" id="downloadCard" style="display: none;">
+                <h3>Download Student Report</h3>
+                <p>Click the button below to download a PDF report containing all the student's marks and calculated
+                    results.</p>
+                <button id="downloadBtn" class="btn btn-accent pulse" onclick="generatePDF()">
+                    <i class="fas fa-download"></i> Download PDF Report
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="about-section">
+        <div class="container">
+            <div class="section-title">
+                <h2>About This System</h2>
+                <p>Learn more about our Student Marks Management System.</p>
+            </div>
+
+            <div class="form-container">
+                <div style="text-align: center;">
+                    <h3 style="color: var(--primary-color); margin-bottom: 1.5rem;">Student Marks Management System</h3>
+                    <p>This system allows teachers and administrators to efficiently record, calculate, and manage
+                        student marks across multiple subjects. With automatic calculations, comprehensive reporting,
+                        and PDF generation capabilities, it streamlines the academic assessment process.</p>
+
+                    <div style="margin-top: 2rem; display: flex; justify-content: center; gap: 2rem; flex-wrap: wrap;">
+                        <div style="text-align: center; max-width: 300px;">
+                            <!-- Completing the HTML file from where it was cut off -->
+                            <i class="fas fa-calculator"
+                                style="font-size: 2.5rem; color: var(--primary-color); margin-bottom: 1rem;"></i>
+                            <h4 style="color: var(--dark-color); margin-bottom: 0.5rem;">Mark Calculation</h4>
+                            <p>Automatically calculates totals, averages, percentages, and identifies top subjects.</p>
+                        </div>
+                        <div style="text-align: center; max-width: 300px;">
+                            <i class="fas fa-file-pdf"
+                                style="font-size: 2.5rem; color: var(--primary-color); margin-bottom: 1rem;"></i>
+                            <h4 style="color: var(--dark-color); margin-bottom: 0.5rem;">PDF Reports</h4>
+                            <p>Generate professional PDF reports with complete student mark details.</p>
+                        </div>
+                        <div style="text-align: center; max-width: 300px;">
+                            <i class="fas fa-chart-bar"
+                                style="font-size: 2.5rem; color: var(--primary-color); margin-bottom: 1rem;"></i>
+                            <h4 style="color: var(--dark-color); margin-bottom: 0.5rem;">Performance Analysis</h4>
+                            <p>View detailed performance insights with color-coded indicators.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer
+        style="background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%); color: white; padding: 2rem 0; text-align: center; margin-top: 3rem;">
+        <div class="container">
+            <p>&copy; 2025 EduTrack - Student Marks Management System. All rights reserved.</p>
+            <div style="margin-top: 1rem;">
+                <a href="#" style="color: white; margin: 0 10px;"><i class="fab fa-facebook"></i></a>
+                <a href="#" style="color: white; margin: 0 10px;"><i class="fab fa-twitter"></i></a>
+                <a href="#" style="color: white; margin: 0 10px;"><i class="fab fa-instagram"></i></a>
+                <a href="#" style="color: white; margin: 0 10px;"><i class="fab fa-linkedin"></i></a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- JavaScript for the Student Marks Management System -->
+    <script>
+
+        function generatePDF() {
+            // Check if jsPDF is loaded correctly
+            if (typeof jsPDF !== 'undefined') {
+                const { jsPDF } = window.jspdf;
+                const doc = new jsPDF();
+
+                // Add title
+                doc.setFontSize(20);
+                doc.setTextColor(102, 126, 234); // Primary color
+                doc.text('Student Marks Report', 105, 20, { align: 'center' });
+
+                // Add student info
+                doc.setFontSize(12);
+                doc.setTextColor(0, 0, 0);
+                doc.text(`Student: ${document.getElementById('studentName').value}`, 20, 40);
+                doc.text(`ID: ${document.getElementById('studentId').value}`, 20, 50);
+                doc.text(`Class: ${document.getElementById('className').value}`, 20, 60);
+
+                // Add summary results
+                doc.text(`Total Marks: ${document.getElementById('totalMarks').textContent}`, 20, 80);
+                doc.text(`Average: ${document.getElementById('averageMarks').textContent}`, 20, 90);
+
+                // Create table data
+                const subjects = ['Mathematics', 'Science', 'English', 'History', 'Geography'];
+                const tableData = subjects.map(subject => {
+                    const subjectLower = subject.toLowerCase();
+                    return [
+                        subject,
+                        document.getElementById(`${subjectLower}Paper1Display`).textContent,
+                        document.getElementById(`${subjectLower}Paper2Display`).textContent,
+                        document.getElementById(`${subjectLower}TotalDisplay`).textContent,
+                        document.getElementById(`${subjectLower}Percentage`).textContent
+                    ];
+                });
+
+                // Add table using autoTable plugin
+                doc.autoTable({
+                    startY: 110,
+                    head: [['Subject', 'Paper 1', 'Paper 2', 'Total', 'Percentage']],
+                    body: tableData,
+                    headStyles: {
+                        fillColor: [102, 126, 234],
+                        textColor: [255, 255, 255],
+                        fontStyle: 'bold'
+                    },
+                    alternateRowStyles: {
+                        fillColor: [240, 240, 240]
+                    }
+                });
+
+                // Save the PDF
+                const studentName = document.getElementById('studentName').value.replace(/\s+/g, '_');
+                doc.save(`${studentName}_Report.pdf`);
+            } else {
+                alert('PDF generation failed. Please make sure all libraries are loaded.');
+                console.error('jsPDF not loaded');
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', function () {
+            // Mobile Menu Toggle
+            const menuToggle = document.querySelector('.menu-toggle');
+            const navLinks = document.querySelector('.nav-links');
+
+            if (menuToggle) {
+                menuToggle.addEventListener('click', function () {
+                    this.classList.toggle('active');
+                    navLinks.classList.toggle('active');
+                });
+            }
+
+            // Form Submit Event
+            const studentMarksForm = document.getElementById('studentMarksForm');
+            const resultsDisplay = document.getElementById('resultsDisplay');
+            const downloadCard = document.getElementById('downloadCard');
+
+            // Calculate Subject Total on Input Change
+            const subjectInputs = {
+                maths: ['mathsPaper1', 'mathsPaper2', 'mathsTotal'],
+                science: ['sciencePaper1', 'sciencePaper2', 'scienceTotal'],
+                english: ['englishPaper1', 'englishPaper2', 'englishTotal'],
+                history: ['historyPaper1', 'historyPaper2', 'historyTotal'],
+                geography: ['geographyPaper1', 'geographyPaper2', 'geographyTotal']
+            };
+
+            Object.keys(subjectInputs).forEach(subject => {
+                const paper1Id = subjectInputs[subject][0];
+                const paper2Id = subjectInputs[subject][1];
+                const totalId = subjectInputs[subject][2];
+
+                document.getElementById(paper1Id).addEventListener('input', function () {
+                    calculateSubjectTotal(paper1Id, paper2Id, totalId);
+                });
+
+                document.getElementById(paper2Id).addEventListener('input', function () {
+                    calculateSubjectTotal(paper1Id, paper2Id, totalId);
+                });
+            });
+
+            function calculateSubjectTotal(paper1Id, paper2Id, totalId) {
+                const paper1Value = parseFloat(document.getElementById(paper1Id).value) || 0;
+                const paper2Value = parseFloat(document.getElementById(paper2Id).value) || 0;
+                const total = paper1Value + paper2Value;
+                document.getElementById(totalId).textContent = total;
+            }
+
+            // Form Submit and Calculate Results
+            if (studentMarksForm) {
+                studentMarksForm.addEventListener('submit', function (e) {
+                    e.preventDefault();
+
+                    // Get student details
+                    const studentName = document.getElementById('studentName').value;
+                    const studentId = document.getElementById('studentId').value;
+                    const className = document.getElementById('className').value;
+                    const classTeacher = document.getElementById('classTeacher').value;
+                    const academicYear = document.getElementById('academicYear').value;
+
+                    // Get and calculate subject marks
+                    const subjects = {};
+                    let totalMarks = 0;
+                    let highestSubject = { name: '', marks: 0 };
+
+                    Object.keys(subjectInputs).forEach(subject => {
+                        const paper1Id = subjectInputs[subject][0];
+                        const paper2Id = subjectInputs[subject][1];
+                        const paper1Value = parseFloat(document.getElementById(paper1Id).value) || 0;
+                        const paper2Value = parseFloat(document.getElementById(paper2Id).value) || 0;
+                        const total = paper1Value + paper2Value;
+
+                        subjects[subject] = {
+                            paper1: paper1Value,
+                            paper2: paper2Value,
+                            total: total,
+                            percentage: ((total / 200) * 100).toFixed(2)
+                        };
+
+                        if (total > highestSubject.marks) {
+                            highestSubject = { name: subject.charAt(0).toUpperCase() + subject.slice(1), marks: total };
+                        }
+
+                        totalMarks += total;
+                    });
+
+                    const averageMarks = (totalMarks / (Object.keys(subjects).length * 2)).toFixed(2);
+
+                    // Display results
+                    document.getElementById('studentNameDisplay').textContent = studentName;
+                    document.getElementById('studentInfoDisplay').textContent = `ID: ${studentId} | Class: ${className} | Academic Year: ${academicYear}`;
+                    document.getElementById('totalMarks').textContent = totalMarks;
+                    document.getElementById('averageMarks').textContent = averageMarks;
+                    document.getElementById('highestSubject').textContent = highestSubject.name;
+                    document.getElementById('classTeacherDisplay').textContent = classTeacher;
+
+                    // Display subject-wise details
+                    Object.keys(subjects).forEach(subject => {
+                        document.getElementById(`${subject}Paper1Display`).textContent = subjects[subject].paper1;
+                        document.getElementById(`${subject}Paper2Display`).textContent = subjects[subject].paper2;
+                        document.getElementById(`${subject}TotalDisplay`).textContent = subjects[subject].total;
+                        document.getElementById(`${subject}Percentage`).textContent = `${subjects[subject].percentage}%`;
+
+                        // Apply color coding based on performance
+                        const subjectCard = document.getElementById(`${subject}Card`);
+                        const percentage = parseFloat(subjects[subject].percentage);
+
+                        // Remove any existing color classes
+                        subjectCard.classList.remove('high-score', 'medium-score', 'low-score');
+
+                        if (percentage >= 75) {
+                            subjectCard.style.borderLeftColor = 'var(--success-color)';
+                        } else if (percentage >= 50) {
+                            subjectCard.style.borderLeftColor = 'var(--warning-color)';
+                        } else {
+                            subjectCard.style.borderLeftColor = 'var(--danger-color)';
+                        }
+                    });
+
+                    // Show results section
+                    resultsDisplay.style.display = 'block';
+                    downloadCard.style.display = 'block';
+
+                    // Scroll to results
+                    document.getElementById('results').scrollIntoView({ behavior: 'smooth' });
+                });
+            }
+
+            // Download PDF functionality
+            const downloadBtn = document.getElementById('downloadBtn');
+
+            if (downloadBtn) {
+                downloadBtn.addEventListener('click', function () {
+                    generatePDF();
+                });
+            }
+
+            function generatePDF() {
+                const { jsPDF } = window.jspdf;
+
+                // Create a new PDF
+                const doc = new jsPDF();
+                const pageWidth = doc.internal.pageSize.getWidth();
+
+                // Add styling for the PDF
+                doc.setFontSize(20);
+                doc.setTextColor(102, 126, 234); // primary color
+                doc.text('Student Marks Report', pageWidth / 2, 20, { align: 'center' });
+
+                doc.setFontSize(12);
+                doc.setTextColor(0, 0, 0);
+
+                // Add student information
+                doc.setFontSize(14);
+                doc.text(`Student: ${document.getElementById('studentNameDisplay').textContent}`, 20, 35);
+
+                doc.setFontSize(10);
+                doc.text(`ID: ${document.getElementById('studentId').value}`, 20, 45);
+                doc.text(`Class: ${document.getElementById('className').value}`, 20, 50);
+                doc.text(`Class Teacher: ${document.getElementById('classTeacher').value}`, 20, 55);
+                doc.text(`Academic Year: ${document.getElementById('academicYear').value}`, 20, 60);
+
+                // Add summary results
+                doc.setFontSize(12);
+                doc.setTextColor(102, 126, 234);
+                doc.text('Results Summary', 20, 70);
+
+                doc.setFontSize(10);
+                doc.setTextColor(0, 0, 0);
+                doc.text(`Total Marks: ${document.getElementById('totalMarks').textContent}`, 20, 80);
+                doc.text(`Average Score: ${document.getElementById('averageMarks').textContent}`, 20, 85);
+                doc.text(`Highest Subject: ${document.getElementById('highestSubject').textContent}`, 20, 90);
+
+                // Add subject-wise details
+                doc.setFontSize(12);
+                doc.setTextColor(102, 126, 234);
+                doc.text('Subject Details', 20, 105);
+
+                doc.setFontSize(10);
+                doc.setTextColor(0, 0, 0);
+
+                // Create subject table
+                const subjects = ['Mathematics', 'Science', 'English', 'History', 'Geography'];
+                const tableData = [];
+
+                // Add header row
+                tableData.push(['Subject', 'Paper 1', 'Paper 2', 'Total', 'Percentage']);
+
+                // Add data rows
+                subjects.forEach((subject, index) => {
+                    const subjectLower = subject.toLowerCase();
+                    tableData.push([
+                        subject,
+                        document.getElementById(`${subjectLower}Paper1Display`).textContent,
+                        document.getElementById(`${subjectLower}Paper2Display`).textContent,
+                        document.getElementById(`${subjectLower}TotalDisplay`).textContent,
+                        document.getElementById(`${subjectLower}Percentage`).textContent
+                    ]);
+                });
+
+                // Draw the table
+                autoTable(doc, {
+                    startY: 110,
+                    head: [tableData[0]],
+                    body: tableData.slice(1),
+                    theme: 'grid',
+                    headStyles: {
+                        fillColor: [102, 126, 234],
+                        textColor: [255, 255, 255],
+                        fontStyle: 'bold'
+                    },
+                    alternateRowStyles: {
+                        fillColor: [240, 240, 240]
+                    }
+                });
+
+                // Add footer
+                const finalY = doc.lastAutoTable.finalY || 200;
+                doc.setFontSize(8);
+                doc.text(`Report generated on ${new Date().toLocaleDateString()} by EduTrack Student Marks Management System`, pageWidth / 2, finalY + 20, { align: 'center' });
+
+                // Save the PDF
+                const studentName = document.getElementById('studentName').value.replace(/\s+/g, '_');
+                doc.save(`${studentName}_Marks_Report.pdf`);
+            }
+
+            // Function for AutoTable (PDF generation)
+            function autoTable(doc, options) {
+                // Simple AutoTable implementation
+                const startY = options.startY || 20;
+                const margin = 20;
+                const cellPadding = 5;
+                const lineHeight = 10;
+                const columns = options.head[0].length;
+                const columnWidth = (doc.internal.pageSize.getWidth() - margin * 2) / columns;
+
+                let y = startY;
+
+                // Draw header
+                doc.setFillColor(options.headStyles.fillColor[0], options.headStyles.fillColor[1], options.headStyles.fillColor[2]);
+                doc.setTextColor(options.headStyles.textColor[0], options.headStyles.textColor[1], options.headStyles.textColor[2]);
+                doc.setFontStyle(options.headStyles.fontStyle);
+
+                for (let i = 0; i < options.head[0].length; i++) {
+                    doc.rect(margin + i * columnWidth, y, columnWidth, lineHeight, 'F');
+                    doc.text(options.head[0][i], margin + i * columnWidth + cellPadding, y + lineHeight - cellPadding);
+                }
+
+                y += lineHeight;
+
+                // Draw body
+                doc.setFontStyle('normal');
+                doc.setTextColor(0, 0, 0);
+
+                for (let i = 0; i < options.body.length; i++) {
+                    // Alternate row background
+                    if (i % 2 === 1 && options.alternateRowStyles) {
+                        doc.setFillColor(options.alternateRowStyles.fillColor[0], options.alternateRowStyles.fillColor[1], options.alternateRowStyles.fillColor[2]);
+                        doc.rect(margin, y, columnWidth * columns, lineHeight, 'F');
+                    }
+
+                    for (let j = 0; j < options.body[i].length; j++) {
+                        doc.text(options.body[i][j], margin + j * columnWidth + cellPadding, y + lineHeight - cellPadding);
+                    }
+
+                    y += lineHeight;
+                }
+
+                // Store final Y position
+                doc.lastAutoTable = { finalY: y };
+            }
+
+            // Add animation classes when elements come into view
+            const animatedElements = document.querySelectorAll('.slide-left, .slide-right');
+
+            function checkScroll() {
+                animatedElements.forEach(element => {
+                    const elementTop = element.getBoundingClientRect().top;
+                    const windowHeight = window.innerHeight;
+
+                    if (elementTop < windowHeight - 100) {
+                        element.style.opacity = '1';
+                        element.style.transform = 'translateX(0)';
+                    }
+                });
+            }
+
+            window.addEventListener('scroll', checkScroll);
+            checkScroll(); // Check on initial load
+
+            // Form Input Validation
+            const numberInputs = document.querySelectorAll('input[type="number"]');
+
+            numberInputs.forEach(input => {
+                input.addEventListener('input', function () {
+                    if (parseFloat(this.value) > 100) {
+                        this.value = 100;
+                    } else if (parseFloat(this.value) < 0) {
+                        this.value = 0;
+                    }
+                });
+            });
+
+            // Highlight Navigation Link based on section in view
+            const sections = document.querySelectorAll('section[id]');
+            const navLinksList = document.querySelectorAll('.nav-links a');
+
+            function highlightNavLink() {
+                let scrollPosition = window.scrollY + 100; // Adding offset for fixed header
+
+                sections.forEach(section => {
+                    const sectionTop = section.offsetTop;
+                    const sectionHeight = section.offsetHeight;
+                    const sectionId = section.getAttribute('id');
+
+                    if (scrollPosition >= sectionTop && scrollPosition < sectionTop + sectionHeight) {
+                        navLinksList.forEach(link => {
+                            link.classList.remove('active');
+                            if (link.getAttribute('href') === `#${sectionId}`) {
+                                link.classList.add('active');
+                            }
+                        });
+                    }
+                });
+            }
+
+            window.addEventListener('scroll', highlightNavLink);
+            highlightNavLink(); // Check on initial load
+
+            // Initialize current date for academic year
+            const currentYear = new Date().getFullYear();
+            document.getElementById('academicYear').value = `${currentYear}-${currentYear + 1}`;
+        });
+    </script>
+</body>
+
+</html>
